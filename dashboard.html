@@ -143,6 +143,7 @@
         body {
         background: #0c1324;
         color: #fff;
+        width: 100dvw;
         }
 
         /* ===== UI ===== */
@@ -647,7 +648,7 @@
           <p class="more-category-pill" data-type="unread">Rewards</p>
           <p class="more-category-pill" data-type="account">Tools</p>
           <p class="more-category-pill" data-type="trading">Funding</p>
-          <p class="more-category-pill" data-type="trading">Support</p>          
+          <p class="more-category-pill" data-type="trading" onclick="window.location.href='support.html'" style="cursor:pointer;">Support</p>          
         </div>      
 
         <div class="more-features-row">
@@ -772,12 +773,21 @@
                   <img src="images/help-center-neon-icon.JPG" alt=""></div>
                 <p class="feature-card-text">Help Center</p>
               </div>
+              <!--
+                <div class="feature-card" id="livechatButton" onclick="window.location.href='support.html'" style="cursor:pointer;">
+                  <div class="feature-card-icon">
+                    <img src="images/support-neon-icon.JPG" alt="">
+                  </div>
+                  <p class="feature-card-text">Live Chat</p>
+                </div>              
+              -->
 
-              <div class="feature-card" id="livechatButton">
+              <div class="feature-card" onclick="window.location.href='support.html'" style="cursor:pointer;">
                 <div class="feature-card-icon">
-                  <img src="images/support-neon-icon.JPG" alt=""></div>
+                  <img src="images/support-neon-icon.JPG" alt="">
+                </div>
                 <p class="feature-card-text">Live Chat</p>
-              </div>
+              </div>              
 
               <div class="feature-card" id="submitquestionButton">
                 <div class="feature-card-icon">
@@ -1031,7 +1041,7 @@
                   <img src="images/settings-icon.png" alt="" style="width: 20px; height: 20px;">
                   <p style="font-size: 16px;">Settings</p>
                 </div>
-                <div class="account-control-btn">
+                <div class="account-control-btn" onclick="window.location.href='support.html'" style="cursor:pointer;">
                   <img src="images/profile-icon.png" alt="" style="width: 15px; height: 15px;">
                   <p style="font-size: 16px;">Support</p>
                 </div>
