@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"   content="width=device-width, initial-scale=1.0" />
+  <title>XM Trading</title>
+
+<style>
+:root{--bg-dark:#070b16;--bg-dark-2:#0b1022;--primary:#1f7bff;--text-main:#ffffff;--text-muted:#9aa4c7;--card-bg:#11162b;--chart-width:1400px auto;--chart-opacity:.35}
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Roboto,Arial,sans-serif}
+.wrap{min-height:100vh;background-color:white;display:flex;flex-direction:column}
+nav{display:flex;align-items:center;padding:20px;position:fixed;width:100%;top:0;z-index:1002;gap:50px}
+#nav{background:transparent;transition:background .3s ease}#nav.scrolled{background:#fff}#nav-btns{cursor: pointer; color:#fff}nav a{color:#fff}nav h1{color:var(--primary);font-size:22px}nav img{height:50px}.nav-links{list-style:none;display:flex;gap:30px}.nav-links a{text-decoration:none;font-weight:500;border-radius:10px;padding:10px 20px}.nav-actions{display:none;align-items:center;gap:12px}nav .btn{background:var(--primary);color:#fff;padding:10px 18px;border-radius:10px;text-decoration:none}.nav-item{position:relative;cursor:pointer}.nav-item p{margin:0;font-weight:500}.dropdown{position:absolute;top:60px;left:0;background:#fff;border-radius:8px;overflow:hidden;min-width:160px;opacity:0;visibility:hidden;transform:translateY(10px);transition:all .3s ease;box-shadow:0 4px 12px rgba(0,0,0,.3);z-index:100}.nav-item.open .dropdown{opacity:1;visibility:visible;transform:translateY(0)}.dropdown a{display:block;padding:10px 14px;color:#10183a;text-decoration:none;font-size:14px}.dropdown a:hover{background:#f2f4f8}.has-dropdown{cursor:pointer;display:inline-flex;align-items:center;gap:6px;user-select:none}.has-dropdown .caret-img{width:8px;height:6px;transition:transform .25s ease}.nav-item.open .has-dropdown .caret-img{transform:rotate(180deg)}.menu-btn{display:none;background:none;border:none;font-size:26px;cursor:pointer;color:white}.drawer{position:fixed;top:0;right:-100%;width:100%;height:100vh;background:#fff;padding:90px 25px;display:flex;flex-direction:column;gap:25px;transition:.35s ease;z-index:1001}.drawer a{text-decoration:none;font-size:18px;border-radius:10px;padding:10px 20px}.drawer.open{right:0}.drawer-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:.35s ease;z-index:1000}.drawer-backdrop.show{opacity:1;pointer-events:auto}
+.hero{text-align:center;padding:90px 20px 40px}.hero small{color:var(--text-muted);font-size:14px} .nav-btns{cursor: pointer;} .hero h1{font-size:54px;line-height:1.2;margin:18px 0}.hero p{max-width:680px;margin:0 auto;color:var(--text-muted);font-size:17px}.hero .cta{margin-top:35px}.hero .cta button{background:var(--primary);color:#fff;border:none;padding:16px 34px;border-radius:8px;font-size:16px;cursor:pointer}.hero .cta span{display:block;margin-top:10px;font-size:12px;color:var(--text-muted)}
+.market-strip{margin-top:90px;display:grid;grid-template-columns:repeat(5,1fr);gap:18px;flex-wrap:wrap;padding:0 60px}.market-card{background:var(--card-bg);padding:14px 20px;border-radius:10px;display:flex;align-items:center;gap:12px;min-width:210px}.market-icon{height:32px}.market-card strong{font-size:14px}.market-card span{font-size:12px;color:var(--text-muted)}
+.awards{margin:90px auto 40px;text-align:center}.award-row{display:flex;justify-content:center;gap:40px;flex-wrap:wrap;margin-bottom:20px}.award-box{width:90px;height:90px;background:#1a1f36;border-radius:10px}.awards p{color:#fff;font-weight:600}
+.section-1{position:relative;color:var(--text-main);border-radius:0 0 100px 100px;padding-top:100px;overflow:hidden;background:radial-gradient(circle at bottom,#10183a 0%,var(--bg-dark) 60%)}
+.section-1::before{content:"";position:absolute;inset:0;background:url("images/mountain.webp") center / var(--chart-width) no-repeat;opacity:var(--chart-opacity);pointer-events:none;z-index:0;}
+.section-1::after{content:"";position:absolute;inset:0;background:url("images/charts-1440w.webp") center / var(--chart-width) no-repeat;opacity:var(--chart-opacity);pointer-events:none;
+z-index:0;clip-path: inset(0 100% 0 0);animation: revealBg 2s ease-out forwards;}
+/* 🔥 keyframes */
+@keyframes revealBg {from { clip-path: inset(0 100% 0 0);} to {clip-path: inset(0 0 0 0);}}
+/* keep content above */
+.section-1 > *{position:relative;z-index:1;}
+.section-2{display:flex;flex-direction:column;width:100%;padding:100px 40px;gap:40px;}.section-2-text-wrapper{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;margin-bottom:17px}.section-2-text-wrapper h3{font-size:46px;text-justify:center}.section-2-text-wrapper span{color:blue}.section-2-text-wrapper p{font-size:19.2px;color:gray}
+.section-3{background:radial-gradient(circle at top,#10183a 0%,var(--bg-dark) 60%);color:var(--text-main);border-radius:100px 100px 0 0;min-height:800px;padding:90px 24px 0px 24px}
+.grid-cards-wrapper-1{display:grid;grid-template-columns:1.4fr 1fr;gap:40px}.grid-cards-wrapper-2{display:grid;grid-template-columns:1fr 2.1fr;gap:40px}
+.card{cursor: pointer; position:relative;min-height:300px;min-width:360px;padding:26px;border-radius:22px;overflow:hidden;color:#fff;isolation:isolate;display:flex;flex-direction:column;justify-content:space-between;flex-shrink:0}.card [class^="bg-"]{position:absolute;z-index:0;pointer-events:none}
+.card .bg-light{top:-295px;right:-240px;width:700px;height:700px;background:var(--light-img) no-repeat center;background-size:contain;mix-blend-mode:luminosity;opacity:.95;transition:transform .8s cubic-bezier(.2,.8,.2,1)}.card .bg-light-bonus{top:-160px;right:-220px;width:700px;height:700px;background:var(--light-img-bonus) no-repeat center;background-size:contain;mix-blend-mode:luminosity;opacity:.4;transition:transform .8s cubic-bezier(.2,.8,.2,1)}.card .bg-light-competition{top:-160px;right:-178px;width:600px;height:600px;background:var(--light-img-competition) no-repeat center;background-size:contain;mix-blend-mode:luminosity;filter:blur(15px);opacity:.95;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.card .bg-object{right:-110px;bottom:-120px;width:380px;height:380px;background:var(--object-img) no-repeat center;background-size:contain;opacity:.95;transition:transform .8s cubic-bezier(.2,.8,.2,1)}.card .bg-object-bonus{bottom:-160px;right:-100px;width:400px;height:400px;background:var(--object-img-bonus) no-repeat center;background-size:contain;mix-blend-mode:luminosity;opacity:1;transition:transform .8s cubic-bezier(.2,.8,.2,1)}.card .bg-object-competition{right:50px;bottom:-80px;width:250px;height:250px;background:var(--object-img-competition) no-repeat center;background-size:contain;opacity:.95;transition:transform .8s cubic-bezier(.2,.8,.2,1)}.card .bg-object-copy{right:-110px;bottom:-120px;width:400px;height:400px;background:var(--object-img-copy) no-repeat center;background-size:contain;opacity:.95;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.card:hover .bg-light,.card:hover .bg-light-bonus,.card:hover .bg-light-competition{transform:scale(1.05) translate(-5px,5px)}.card:hover .bg-object,.card:hover .bg-object-bonus,.card:hover .bg-object-competition,.card:hover .bg-object-copy{transform:scale(1.06) translate(-12px,-16px)}
+.card h3,.card p,.card a{position:relative;z-index:1}.card h3{margin:0 0 10px;font-size:40px;font-weight:600}.card p{margin:0;font-size:15px;line-height:1.45;font-weight:bold;color:rgba(255,255,255,.88)}.copy p,.app p{max-width:60%}.bonus p,.competition p{max-width:72%}.card a{margin-top:18px;font-size:18px;font-weight:bold;text-decoration:none;color:#fff}
+.card.app{background:radial-gradient(circle at center,#1b2d5b 0%,#0b1327 70%);--light-img:url("images/swirl-803w.webp");--object-img:url("images/phone-461w.webp")}.card.bonus{background:radial-gradient(circle at top right,#255aa8 0%,#255aa8 72%);--light-img-bonus:url("images/swirl-bonus-1000w.webp");--object-img-bonus:url("images/gift-583w.webp")}.card.competition{background:linear-gradient(135deg,#081f2a 0%,#0f3a4f 70%);--light-img-competition:url("images/swirl-bonus-1000w.webp");--object-img-competition:url("images/trophy-542w.webp")}.card.copy{background:#e9ebf5;color:#0b1022;--light-img:url("images/swirl-light.webp");--object-img-copy:url("images/copy-trading-326w.webp")}.card.copy .bg-light{mix-blend-mode:soft-light;opacity:.7}.card.copy p{color:#4b556d}.card.copy a{color:#1d4ed8}
+.section-3-header{text-align:center;max-width:820px;margin:0 auto 80px}.section-3-header h2{font-size:40px;font-weight:600;margin:0 0 14px}.section-3-header p{font-size:15px;color:rgba(255,255,255,.7);margin:0}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:60px;max-width:1100px;margin:0 auto 90px;text-align:center}.stat h3{font-size:48px;font-weight:700;margin:0 0 12px}.stat p{font-size:14px;line-height:1.5;color:rgba(255,255,255,.75);max-width:260px;margin:0 auto}
+.features-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:30px;max-width:1200px;margin:0 auto 70px}.feature-card{position:relative;padding:30px 26px;border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(8px)}.feature-card::before{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at top,rgba(56,130,246,.15),transparent 60%);opacity:.6;pointer-events:none}.feature-icon{width:60px;height:60px;border-width:2px;border-radius:50%;background:rgba(56,130,246,.15);display:flex;align-items:center;justify-content:center;margin-bottom:18px}.feature-icon img{height:18px}.feature-card h4{font-size:25px;font-weight:600;margin:0 0 8px}.feature-card p{font-size:15px;line-height:1.45;color:rgba(255,255,255,.65);margin:0}
+.section-3-cta{text-align:center}.section-3-cta a{display:inline-block;padding:12px 26px;border-radius:8px;background:linear-gradient(180deg,#3b82f6,#2563eb);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 10px 30px rgba(37,99,235,.35)}
+.ticker-wrapper {position: relative;width: 100%;height: 140px;overflow: hidden;background: transparent;margin-top: 100px;}
+
+  /* Scrolling layer */
+.ticker {position: absolute;inset: 0;opacity: 0.5;/* requested opacity */}
+
+  /* Moving track */
+.ticker-track {display: flex;width: max-content;animation: scroll-left 15s linear infinite;}
+
+  /* Placeholder blocks */
+.ticker-item {width: 220px;height: 80px;margin: 30px 20px;border-radius: 12px; display: flex;gap: 15px;align-items: center;}
+.ticker-item div{width: 1px;height: 80%;background-color: #ffffff88;}
+
+  /* Animation */
+@keyframes scroll-left {from {transform: translateX(0);}  to {transform: translateX(-50%);}}
+
+  /* Overlay container */
+  .ticker-overlay {position: relative;z-index: 2;width: 100%;height: 100%;display: flex;align-items: center;justify-content: center;flex-direction: column;gap: 15px;}
+  .nav-cta-wrapper{width: 100%;display: flex;justify-content: end; gap: 20px;align-items: center;}
+  #nav-cta{padding: 10px 15px;border-radius: 10px;cursor: pointer;} .nav-cta{color: black;background-color: #fff;} .nav-cta-scrolled{color: #fff; background: #0b1b33;}
+  /* Overlay placeholder */
+.overlay-placeholder {padding: 1.2rem 2.5rem;border-radius: 14px;background: rgba(16, 24, 58, 0.9);color: #fff;font-weight: 600;backdrop-filter: blur(6px);box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);}
+@media(max-width:900px){.stats-row{grid-template-columns:1fr;gap:40px}.features-grid{grid-template-columns:1fr}.section-3{padding:90px 24px 0px 24px;border-radius:50px 50px 0 0}.section-1{border-radius:0 0 50px 50px;padding-top:20px}.market-strip{overflow-x:scroll}.nav-links{display:none}.menu-btn{display:block}.section{margin-bottom:20px}.balance-grid{grid-template-columns:1fr;gap:0}.wrapper{padding:20px 15px}.stat-block strong{font-size:20px}.balance-action h4{font-size:12px}.stat-block h4{font-size:15px}.balance-header span{font-size:12px}.balance-header button{font-size:12px}.nav-actions a{display:none} .nav-actions{display: flex;} nav{justify-content:space-between}.card .bg-object{right:-110px;bottom:-120px;width:290px;height:290px}.card .bg-object-bonus{bottom:-160px;right:-100px;width:400px;height:400px}.card .bg-object-competition{right:-100px;bottom:-80px;width:250px;height:250px}.card .bg-object-copy{right:-200px;bottom:-120px;width:400px;height:400px}.hero small{font-size:14px}.hero h1{font-size:37px;line-height:1}}
+@media(max-width:768px){.nav-cta-wrapper{display: none;} .grid-cards-wrapper-1,.grid-cards-wrapper-2{grid-template-columns:1fr}.section-2{padding:20px 16px;}.card{width:100%;min-width:0;min-height:400px}.card p{max-width:none}.card .bg-object{right:-110px;bottom:-120px;width:290px;height:290px}}
+</style>
+<style>
+  * {
+  -webkit-tap-highlight-color: transparent;
+  }
+</style>
+
+</head>
+
+
+<body>
+  <nav id="nav">
+    <img src="images/xm-logo-white.png" alt="" class="logo" id="logo">
+
+    <div class="nav-links">
+      <div class="nav-item">
+        <p class="nav-btns has-dropdown">Trading <img class="caret-img" src="images/arrow-white.png" alt="caret"></p>
+        <div class="dropdown">
+          <a href="#">Forex</a>
+          <a href="#">Crypto</a>
+          <a href="#">Indices</a>
+        </div>
+      </div>
+
+      <div class="nav-item">
+        <p class="nav-btns has-dropdown">Discover <img class="caret-img" src="images/arrow-white.png" alt="caret"></p>
+        <div class="dropdown">
+          <a href="#">Education</a>
+          <a href="#">Market Analysis</a>
+          <a href="#">Tools</a>
+        </div>
+      </div>
+
+      <div class="nav-item">
+        <p><a href="" class="nav-btns">Promotions</a></p>
+      </div>
+
+      <div class="nav-item">
+        <p class="nav-btns has-dropdown">Company <img class="caret-img" src="images/arrow-white.png" alt="caret"></p>
+        <div class="dropdown">
+          <a href="#">About Us</a>
+          <a href="#">Careers</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+    <div class="nav-cta-wrapper">
+    <p class="nav-btns" data-link="login.html">Login</p>
+    <p class="nav-cta" id="nav-cta" data-link="register.html">Get Started</p>
+    </div>
+
+
+    <div class="nav-actions">
+      <button class="menu-btn" id="menu">☰</button>
+    </div>
+  </nav>
+
+  <div class="drawer" id="drawer">
+<!-- MOBILE DRAWER -->
+
+  <div class="xm-drawer-content">
+
+    <div class="xm-menu">
+
+      <button class="xm-menu-toggle">
+        Trading
+        <span class="xm-caret">⌄</span>
+      </button>
+      <div class="xm-menu-panel">
+        <p>Forex</p>
+        <p>Stocks</p>
+        <p>Indices</p>
+      </div>
+
+      <button class="xm-menu-toggle">
+        Discover
+        <span class="xm-caret">⌄</span>
+      </button>
+      <div class="xm-menu-panel">
+        <p>Copy Trading</p>
+        <p>Competitions</p>
+        <p>Traders Club</p>
+      </div>
+
+      <p class="xm-menu-link">Promotions</p>
+
+      <button class="xm-menu-toggle">
+        Company
+        <span class="xm-caret">⌄</span>
+      </button>
+      <div class="xm-menu-panel">
+        <p>About Us</p>
+        <p>Careers</p>
+        <p>Regulation</p>
+      </div>
+
+      <a class="xm-menu-external" href="#">
+        Partnership
+        <span>↗</span>
+      </a>
+
+    </div>
+
+    <div class="xm-divider"></div>
+
+    <div class="xm-language">
+      <img src="images/uk-flag.svg" alt="">
+      <span>English</span>
+    </div>
+
+    <div class="xm-store-buttons">
+      <img src="images/app-store.svg" alt="">
+      <img src="images/google-play.svg" alt="">
+    </div>
+
+    <button class="xm-primary-btn" data-link="register.html">Get Started</button>
+    <button class="xm-secondary-btn"  data-link="login.html">Login</button>
+
+  </div>
+
+
+  </div>
+  <div class="drawer-backdrop" id="backdrop"></div>
+
+  <div class="wrap">
+    <div class="section-1">
+      <section class="hero">
+        <small class="fade">Trusted by over <strong style="color: white;">15 Million Traders</strong></small>
+        <h1 class="fade text-gradient-vertical">The Most Awarded Broker<br />for a Reason</h1>
+        <p class="fade">
+          We offer a superior trading environment that puts traders
+          in the best position to profit.
+        </p>
+
+        <div class="cta fade">
+          <button  data-link="register.html">Get a 100% Bonus up to $100</button>
+          <span>*Limited-Time Offer</span>
+        </div>
+      </section>
+
+      <div class="market-strip">
+        <div class="market-card">
+          <img class="market-icon" src="images/eur-usd.svg" alt="">
+          <div>
+            <strong>EURUSD</strong><br>
+            <span>Euro vs U.S. Dollar</span>
+          </div>
+        </div>
+
+        <div class="market-card">
+          <img class="market-icon" src="images/us500.svg" alt="">
+          <div>
+            <strong>US500</strong><br>
+            <span>S&P 500</span>
+          </div>
+        </div>
+
+        <div class="market-card">
+          <img class="market-icon" src="images/gold.svg" alt="">
+          <div>
+            <strong>GOLD</strong><br>
+            <span>Gold</span>
+          </div>
+        </div>
+
+        <div class="market-card">
+          <img class="market-icon" src="images/coffee.svg" alt="">
+          <div>
+            <strong>COFFEE</strong><br>
+            <span>US Coffee</span>
+          </div>
+        </div>
+
+        <div class="market-card">
+          <img class="market-icon" src="images/apple.svg" alt="">
+          <div>
+            <strong>APPLE</strong><br>
+            <span>Apple Inc</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ticker-wrapper">
+        <div class="ticker">
+          <div class="ticker-track">
+            <div class="ticker-item"><img src="images/broker_best_cfd_fx_europe_middle_east_24.svg" alt=""> <div class="margin-line"></div> <p>Awarded by World Finance Forex Awards 2022</p></div>
+            <div class="ticker-item"><img src="images/broker_best_conversion_partnership_program_24.svg" alt=""> <div class="margin-line"></div> <p>Best Gold Broker 2016</p></div>
+            <div class="ticker-item"><img src="images/broker_best_partnership_program_24.svg" alt=""> <div class="margin-line"></div> <p>Awarded by the Global Economist</p></div>
+            <div class="ticker-item"><img src="images/broker_best_social_trading_platform_24.svg" alt=""> <div class="margin-line"></div> <p>Global Brands Magazine</p></div>
+            <div class="ticker-item"><img src="images/broker_best_swap_free_mena_22.svg" alt=""> <div class="margin-line"></div> <p>Awarded by Online Money Awards</p></div>
+            <div class="ticker-item"><img src="images/broker_best_trading_stability_24.svg" alt=""> <div class="margin-line"></div> <p>Best Forex Platform 2016</p></div>
+            <div class="ticker-item"><img src="images/broker_best_cfd_fx_europe_middle_east_24.svg" alt=""> <div class="margin-line"></div> <p>Awarded by World Finance Forex Awards 2022</p></div>
+            <div class="ticker-item"><img src="images/broker_best_conversion_partnership_program_24.svg" alt=""> <div class="margin-line"></div> <p>Best Gold Broker 2016</p></div>
+            <div class="ticker-item"><img src="images/broker_best_partnership_program_24.svg" alt=""> <div class="margin-line"></div> <p>Awarded by the Global Economist</p></div>
+            <div class="ticker-item"><img src="images/broker_best_social_trading_platform_24.svg" alt=""> <div class="margin-line"></div> <p>Global Brands Magazine</p></div>
+            <div class="ticker-item"><img src="images/broker_best_swap_free_mena_22.svg" alt=""> <div class="margin-line"></div> <p>Awarded by Online Money Awards</p></div>
+            <div class="ticker-item"><img src="images/broker_best_trading_stability_24.svg" alt=""> <div class="margin-line"></div> <p>Best Forex Platform 2016</p></div>            
+          </div>
+        </div>
+
+        <div class="ticker-overlay">
+          <!--Overlay Content Placeholder-->
+          <img class="" src="images/award.svg">
+          <p class="">Awarded Best <span class="">Broker</span> Year After Year</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-2">
+      <div class="section-2-text-wrapper" style="text-align: center;">
+        <h3>Discover Our Traders' <span>Favourites</span></h3>
+        <p>Explore some of our must-have products that keep everyone trading with us time and again.</p>
+      </div>
+      <div class="grid-cards-wrapper-1">
+        <div class="card app fade">
+          <div class="bg-light"></div>
+          <div class="bg-object"></div>
+          <div style="display: flex; flex-direction: column;gap: 15px;width: 100%;">
+            <h3>XM App</h3>
+            <p>Get full access to XM services with the top-rated, award-winning XM App.</p>
+            <div style="display:flex;gap:10px;">
+              <img src="images/app-store.webp" style="height:30px;z-index: 10;">
+              <img src="images/play-store.webp" style="height:30px;z-index: 10;">
+            </div>
+          </div>
+          <a href="#">Get the App →</a>
+        </div>
+
+        <div class="card bonus fade">
+          <div class="bg-light-bonus"></div>
+          <div class="bg-object-bonus"></div>
+          <div style="display: flex; flex-direction: column;gap: 15px;width: 100%;">
+            <h3>100% Bonus</h3>
+            <p>Use our funds to trade more, reduce your risk, and boost your returns.</p>
+          </div>
+          <a href="#">Claim Your Bonus →</a>
+        </div>
+      </div>
+
+      <div class="grid-cards-wrapper-2">
+        <div class="card competition fade">
+          <div class="bg-light-competition"></div>
+          <div class="bg-object-competition"></div>
+          <div style="display: flex; flex-direction: column;gap: 15px;width: 100%;">
+            <h3>XM Competitions</h3>
+            <p>Trade your way to the top and win your share of cash prizes.</p>
+          </div>
+          <a href="#">Join Now →</a>
+        </div>
+
+        <div class="card copy fade">
+          <div class="bg-light"></div>
+          <div class="bg-object-copy"></div>
+          <div style="display: flex; flex-direction: column;gap: 15px;width: 100%;">
+            <h3>XM Copy Trading</h3>
+            <p>Copy winning strategies or earn commissions by sharing trades.</p>
+          </div>
+          <a href="#">Start Copy Trading →</a>
+        </div>
+      </div>
+    </div>
+
+    <section class="section-3">
+      <div class="section-3-header fade">
+        <h2>Our Results Are Proven in Numbers</h2>
+        <p>Nobody does more to provide you with what you need to maximise your trading potential.</p>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat fade">
+          <h3>11.7 Billion</h3>
+          <p>trades have been executed on XM Platforms</p>
+        </div>
+        <div class="stat fade">
+          <h3>Zero</h3>
+          <p>rejections or requotes on trades.</p>
+        </div>
+        <div class="stat fade">
+          <h3>92.9%</h3>
+          <p>of our withdrawals are automatically approved.</p>
+        </div>
+      </div>
+
+      <div class="features-grid fade">
+        <div class="feature-card fade">
+          <div class="feature-icon">
+            <img src="images/tight-spreads.svg" alt="" style="height: 60px;">
+          </div>
+          <h4>Tight Spreads</h4>
+          <p>Trade with spreads as low as 0.8 pips.</p>
+        </div>
+
+        <div class="feature-card fade">
+          <div class="feature-icon">
+            <img src="images/low-trading-cost.svg" alt="" style="height: 60px;">
+          </div>
+          <h4>No hidden costs.</h4>
+          <p>Pay no swap fees and zero commission.</p>
+        </div>
+
+        <div class="feature-card fade">
+          <div class="feature-icon">
+            <img src="images/real-market-prices.svg" alt="" style="height: 60px;">
+          </div>
+          <h4>Superior Execution.</h4>
+          <p>Enjoy fair prices with no requotes or rejections.</p>
+        </div>
+
+        <div class="feature-card fade">
+          <div class="feature-icon">
+            <img src="images/super-fast-withdrawals.svg" alt="" style="height: 60px;">
+          </div>
+          <h4>Instant Withdrawals</h4>
+          <p>Get your funds easily and pay no fees.</p>
+        </div>
+      </div>
+
+      <div class="section-3-cta fade">
+        <a href="#">Start Trading Today</a>
+      </div>
+
+      <div class="overlap-card">
+        <div class="overlap-card-content">
+          <h2>Your Funds Are Always Safe and Secure</h2>
+          <p>
+            Trade with a multi-regulated broker that has built long-standing
+            partnerships with top global banks to ensure your funds are always
+            secure.
+          </p>
+        </div>
+      </div>    
+
+    </section>
+
+    <div class="section-4">
+
+      <div style="display: flex; flex-direction: column;gap: 20px;text-align: center;width: 100%;">
+      <h3>Every Trader Can Succeed With XM</h3>
+      <p>We eliminate obstacles that stand in the way of your success.</p>
+      </div>
+
+      <div class="sec-4-card-grid">
+        <div class="sec-4-card-1 fade">
+          <div>
+            <h3 style="color: #000;">New to Trading?</h3>
+            <p>Take advantage of our promotions and demo account to practice risk-free. Master the markets with insights from our team of more than 70 expert educators and free educational resources.</p>
+          </div>
+          <a href="#">Start With Confidence →</a>
+        </div>
+
+        <div class="sec-4-card-2 fade">
+          <div>
+            <h3 style="color: white;">Experienced Trader?</h3>
+            <p>
+              Enjoy a premium experience designed for seasoned traders with rewarding benefits including access to the widest selection of advanced trading tools available. Discover Our Offering
+            </p>
+          </div>
+          <a href="#">Discover Our Offering →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-5 fade">
+      <h3>Rely on Award-Winning Support</h3>
+      <p>Whenever you need us we're just a few seconds away, 24/7, in extensive language options.</p>
+      <p class="sec-5-cta fade">Contact us</p>
+    </div>
+
+    <div class="footer-section fade">
+      <div class="footer-header"> <h3>Feel connected anytime, anywhere.</h3> <div><img src="images/" alt=""></div> </div> <hr>
+      <div class="footer-nav-wrapper">
+        <div class="footer-nav-col">
+          <h3>WHY TRADE WITH US</h3>
+          <p>Our Key Advantages</p>
+          <p>Bonus</p>
+          <p>Execution Policy</p>
+          <p>Stable Max Leverage</p>
+        </div>
+
+        <div class="footer-nav-col">
+          <h3>ACCOUNTS</h3>
+          <p>Account Types</p>
+        </div>
+
+        <div class="footer-nav-col">
+          <h3>OUR OFFERING</h3>
+          <p>XM Copy Trading</p>
+          <p>XM Competitions</p>
+          <p>XM Traders Club</p>
+          <p>Refer a Friend</p>
+        </div>
+
+        <div class="footer-nav-col">
+          <h3>PLATFORMS</h3>
+          <p>MT4 Platform</p>
+          <p>MT5 Platform</p>
+          <p>XM App</p>
+        </div>
+
+        <div class="footer-nav-col">
+          <h3>Company</h3>
+          <p>Who is XM Group?</p>
+          <p>Careers</p>
+          <p>Regulation</p>
+          <p>Legal Documents</p>
+          <p>XM Awards</p>
+          <p>CSR</p>
+          <p>Contact Us</p>
+          <p>Help Center</p>
+        </div>
+      </div>
+      
+      <div class="mobile-menu">
+
+        <div class="menu-item">
+          <button class="menu-toggle">
+            Trading
+            <span class="arrow">⌄</span>
+          </button>
+          <div class="menu-content">
+            <p>Forex</p>
+            <p>Crypto</p>
+            <p>Indices</p>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <button class="menu-toggle">
+            Discover
+            <span class="arrow">⌄</span>
+          </button>
+          <div class="menu-content">
+            <small>OUR OFFERING</small>
+            <p>XM Copy Trading</p>
+            <p>XM Competitions</p>
+            <p>XM Traders Club</p>
+            <p>Refer a Friend</p>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <button class="menu-toggle">
+            Company
+            <span class="arrow">⌄</span>
+          </button>
+          <div class="menu-content">
+            <p>About Us</p>
+            <p>Careers</p>
+            <p>Contact</p>
+          </div>
+        </div>
+
+      </div>
+
+      <hr>
+      <div class="footer-appstore-btns">
+        <img src="images/app-store.svg" alt=""><img src="images/google-play.svg" alt="">
+      </div><hr>
+      <div class="footer-legal">
+        <div class="legal-links">
+          <a href="">Privacy Policy</a>
+          <a href="">Cookie Policy</a>
+          <a href="">Vulnerability Policy</a>
+          <a href="">Legal Documents</a>
+        </div>
+        <div style="display: flex;flex-direction: column;gap:20px;">
+          <p>XM Global Limited is regulated by the Financial Services Commission (FSC) of Belize under the Securities Industry Act 2021 (license number 000261/27).</p>
+          <p> XM (SC) Limited is regulated by the Seychelles Financial Services Authority (FSA) under Securities Dealer's License number SD190.</p>
+          <p>Trading Point of Financial Instruments Limited is authorised and regulated by Cyprus Securities and Exchange Commission (CySEC) under licence number 120/10.</p>
+          <p>All entities referenced herein are part of the Trading Point Group and are duly authorized to operate under the XM brand.</p>
+          <p>Risk Warning: Our services involve a significant risk and can result in the loss of your invested capital. Please read and ensure you fully understand our <a href="">Risk Disclosures (XM Global), Risk Disclosures (XM International MU) and Risk Disclosures (XM (SC) Limited).</a> </p>
+          <p><b>Restricted Regions:</b> We do not provide our service to citizens of the United States of America, Canada, Israel and the Islamic Republic of Iran (and other sanctioned countries).</p>
+          <p> XM does not direct its website and services to any individual in any country in which the use of its website and services are prohibited by local laws or regulations. When accessing this website from a country in which its use may or may not be prohibited, it is the user's responsibility to ensure that any use of the website or services adhere to local laws or regulations. XM does not affirm that the information on its website is suitable to all jurisdictions.
+          <p>XM International MU Limited is regulated by the Financial Services Commission (FSC) of Mauritius under the Investment Dealer's License number GB23202700.</p>
+        </div>
+       
+      </div>
+      <div class="footer-parterners">
+
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  // --- UID routing setup ---
+  const params = new URLSearchParams(window.location.search);
+  const uid = params.get("uid") || "guest";
+
+  document.querySelectorAll("[data-link]").forEach(el => {
+    el.onclick = e => {
+      e.preventDefault();
+      location.href = `${el.dataset.link}?uid=${uid}`;
+    };
+  });
+
+  document.querySelectorAll("button").forEach(btn => {
+    btn.addEventListener("click", () => {});
+  });
+
+  // --- Navbar, Drawer & Dropdowns ---
+  const nav = document.getElementById("nav");
+  const menuBtn = document.getElementById("menu");
+  const logo = document.getElementById("logo");
+  const drawer = document.getElementById("drawer");
+  const backdrop = document.getElementById("backdrop");
+  const navBtns = document.querySelectorAll(".nav-btns");
+  const navcta = document.getElementById("nav-cta");
+
+  const LOGO_TOP = "images/xm-logo-white.png";
+  const LOGO_SCROLL = "images/xm-logo-dark.png";
+
+  function updateNavVisuals() {
+    const atTop = window.scrollY === 0;
+    const drawerOpen = drawer.classList.contains("open");
+
+    /* 🔒 DRAWER OPEN — FORCE SCROLLED STATE */
+    if (drawerOpen) {
+      nav.classList.add("scrolled");
+
+      navcta.classList.remove("nav-cta");
+      navcta.classList.add("nav-cta-scrolled");
+
+      menuBtn.style.color = "#000";
+      logo.src = LOGO_SCROLL;
+
+      navBtns.forEach(btn => {
+        btn.style.color = "#000";
+        const caret = btn.querySelector(".caret-img");
+        if (caret) caret.src = "images/dropdown-dark.png";
+      });
+
+      return;
+    }
+
+    /* 🧭 NORMAL SCROLL BEHAVIOR */
+    nav.classList.toggle("scrolled", !atTop);
+
+    if (atTop) {
+      navcta.classList.add("nav-cta");
+      navcta.classList.remove("nav-cta-scrolled");
+    } else {
+      navcta.classList.remove("nav-cta");
+      navcta.classList.add("nav-cta-scrolled");
+    }
+
+    const textColor = atTop ? "#fff" : "#000";
+    menuBtn.style.color = textColor;
+    logo.src = atTop ? LOGO_TOP : LOGO_SCROLL;
+
+    navBtns.forEach(btn => {
+      btn.style.color = textColor;
+      const caret = btn.querySelector(".caret-img");
+      if (caret) {
+        caret.src = atTop
+          ? "images/dropdown-white.png"
+          : "images/dropdown-dark.png";
+      }
+    });
+  }
+
+  // --- Drawer toggle ---
+  menuBtn.onclick = () => {
+    const isOpen = drawer.classList.toggle("open");
+    backdrop.classList.toggle("show", isOpen);
+    menuBtn.textContent = isOpen ? "✕" : "☰";
+    updateNavVisuals();
+  };
+
+  // --- Close drawer on backdrop ---
+  backdrop.onclick = () => {
+    drawer.classList.remove("open");
+    backdrop.classList.remove("show");
+    menuBtn.textContent = "☰";
+    updateNavVisuals();
+  };
+
+  // --- Dropdown click toggle ---
+  document.querySelectorAll(".has-dropdown").forEach(btn => {
+    btn.addEventListener("click", e => {
+      e.stopPropagation();
+      const item = btn.closest(".nav-item");
+
+      document.querySelectorAll(".nav-item.open").forEach(openItem => {
+        if (openItem !== item) openItem.classList.remove("open");
+      });
+
+      item.classList.toggle("open");
+    });
+  });
+
+  // --- Close dropdowns on outside click ---
+  document.addEventListener("click", () => {
+    document.querySelectorAll(".nav-item.open").forEach(item => {
+      item.classList.remove("open");
+    });
+  });
+
+  // --- Scroll handler ---
+  window.addEventListener("scroll", updateNavVisuals);
+
+  // --- Initial state ---
+  updateNavVisuals();
+</script>
+
+
+</html>
+
+<style>
+/* =========================
+   SECTION-4
+========================= */
+.section-4 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 150px 40px 60px 40px;
+  gap: 40px;
+  background: #f3f3f8;
+  color: var(--text-main);
+  position: relative;
+}
+
+.section-4 h3 {
+  font-size: 46px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #000;
+  font-weight: bold;
+}
+
+.section-4 p {
+  font-size: 19px;
+  color: var(--text-muted);
+  margin-bottom: 40px;
+  font-weight: 600;
+}
+
+.sec-4-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* Base card styling */
+.sec-4-card-1, .sec-4-card-2 {
+  position: relative;
+  border-radius: 22px;
+  padding: 26px;
+  min-height: 360px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  color: #fff;
+  transition: transform .5s ease;
+}
+
+/* LEFT CARD - WHITE */
+.sec-4-card-1 {
+  background: #ffffff;
+  color: #0b1022;
+  --bg-image: url("images/candles-281w.webp");
+  justify-content: end;
+  cursor: pointer;
+}
+
+.sec-4-card-1::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 300px;
+  background: var(--bg-image) no-repeat top right;
+  background-size: contain;
+  opacity: 1;
+  pointer-events: none;
+  transition: transform .8s cubic-bezier(.2,.8,.2,1);
+  z-index: 0;
+}
+
+/* RIGHT CARD - BRAND DARK BLUE GRADIENT */
+.sec-4-card-2 {
+  background: radial-gradient(circle at center, #1b2d5b 0%, #0b1327 70%);
+  --bg-image: url("images/experienced-trade-345w.webp"); cursor: pointer;
+}
+
+.sec-4-card-2::before {
+  content: "";
+  position: absolute;
+  bottom: -80px;
+  right: 0;
+  width: 300px;
+  height: 300px;
+  background: var(--bg-image) no-repeat bottom right;
+  background-size: contain;
+  opacity: 1;
+  pointer-events: none;
+  transition: transform .8s cubic-bezier(.2,.8,.2,1);
+  z-index: 0;
+}
+
+/* Card hover effect */
+.sec-4-card-1:hover::before,
+.sec-4-card-2:hover::before {
+  transform: scale(1.05) translate(-10px, -10px);
+}
+
+/* Inner content stays above bg image */
+.sec-4-card-1 > div, .sec-4-card-2 > div {
+  position: relative;
+  z-index: 1;
+}
+
+.sec-4-card-1 h3, .sec-4-card-2 h3 {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.sec-4-card-1 p, .sec-4-card-2 p {
+  font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+
+.sec-4-card-1 a, .sec-4-card-2 a {
+  position: relative;
+  z-index: 1;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 10px 0px;
+  display: inline-block;
+  transition: background .3s ease;
+}
+.sec-4-card-1 a{color: #2563eb;}
+.sec-4-card-2 a{color: #43da8e;}
+
+
+/* RESPONSIVE */
+@media(max-width: 900px) {
+  .section-4{padding-top: 200px;}
+  .sec-4-card-grid {
+    grid-template-columns: 1fr;
+  }
+  .sec-4-card-1::before, .sec-4-card-2::before {
+    width: 200px;
+    height: 200px;
+  }
+  .sec-4-card-1::before{display: none;}
+  .section-4 h3 {
+    font-size: 36px;
+  }
+  .section-4 p {
+    font-size: 16px;
+  }
+
+  .sec-4-card-1{justify-content: start;}
+}
+</style>
+
+<style>
+  /* =========================
+   SECTION-5
+========================= */
+  .section-5 {
+  position: relative; /* ✅ REQUIRED */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  gap: 20px;
+  background: #fff;
+  color: #000;
+  min-height: 400px;
+  text-align: center;
+  overflow: hidden; /* ✅ keeps bg inside */
+  --bg-image: url("images/award-444w.webp");
+}
+
+.section-5::before {
+  content: "";
+  position: absolute;
+  bottom: -70px;
+  right: -50px;
+  width: 300px;
+  height: 300px;
+  background: var(--bg-image) no-repeat top right;
+  background-size: contain;
+  opacity: 1;
+  pointer-events: none;
+  transition: transform .8s cubic-bezier(.2,.8,.2,1);
+  z-index: 0; /* ✅ behind content */
+}
+
+/* keep content above bg image */
+.section-5 > * {
+  position: relative;
+  z-index: 1;
+}
+
+.section-5 h3 {
+  font-size: 50px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #000;
+}
+
+.section-5 p {
+  font-size: 18px;
+  color: var(--text-muted);
+  margin-bottom: 40px;
+  font-weight: 400;
+}
+
+.section-5 .sec-5-cta {
+  color: #fff;
+  font-weight: 600;
+  font-size: 20px;
+  padding: 10px 15px;
+  background-color: #081f2a;
+  border-radius: 10px;
+  margin: 0;
+  cursor: pointer;
+}
+
+@media(max-width: 740px) {
+.section-5 .sec-5-cta {width: 80%;}
+.section-5::before {display: none;}
+.section-5 h3 {font-size: 30px;font-weight: 700;}
+}
+</style>
+
+<style>
+ /* OVERLAPPING CARD */
+.overlap-card {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  /* 👇 THIS creates the overlap */
+  transform: translateY(50%);
+
+  padding: 48px 60px;
+  border-radius: 22px;
+
+  background: linear-gradient(
+    135deg,
+    #0b1b33 0%,
+    #0f2e4f 45%,
+    #0b1b33 100%
+  );
+
+  overflow: hidden;
+  z-index: 5;
+}
+
+/* RIGHT-SIDE BACKGROUND IMAGE */
+.overlap-card::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -40px;
+  width: 300px;
+  height: 300px;
+
+  /* Placeholder image */
+  background: url("images/count-on-xm-bg-1245w.webp") no-repeat center;
+  background-size: contain;
+
+  transform: translateY(-50%);
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+/* TEXT */
+.overlap-card-content {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.overlap-card-content h2 {
+  font-size: 40px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 14px;
+}
+
+.overlap-card-content p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.75);
+  margin: 0;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .overlap-card {
+    padding: 40px 26px;
+  transform: translateY(50%);
+  }
+
+  .overlap-card::after {
+    width: 220px;
+    height: 220px;
+    right: -60px;
+    opacity: 0.6;
+  }
+
+  .overlap-card-content h2 {
+    font-size: 30px;
+  }
+}
+
+
+</style>
+
+<style>
+  /* =========================
+  FOOTER SECTION-4
+========================= */
+  .footer-section hr{background-color: rgba(128, 128, 128, 0.719);height: 1px;border-color: none;}
+  .footer-section{width: 100%;min-height: 500px;background:#f3f3f8;padding: 70px 20px;}
+  .footer-header{padding: 0px 0px 50px 0px;font-size: 30px;}
+  .footer-nav-wrapper{width: 100%;display: grid;grid-template-columns: 1fr 1fr 1fr 1fr 1fr; padding: 50px 0px;}
+  .footer-nav-col{min-height: 100px;min-width: 50px;display: flex; flex-direction: column;gap: 10px;}
+  .footer-nav-col p{cursor: pointer;}
+  .footer-nav-col p:hover{color: blue;}
+  .footer-nav-col h3{color: gray;}
+  .footer-appstore-btns{width: 100%;display: flex;justify-content: end;gap: 10px;padding: 30px 0px;}
+  .footer-appstore-btns img{height: 40px;}
+  .footer-notes{width: 100%;}
+  .legal-links{gap: 20px; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr ; width: fit-content; color: blue;}
+  .footer-legal{display: flex;flex-direction: column;gap: 30px; font-size: 16px;padding: 30px 0px; color: gray;}
+  .footer-legal a{text-decoration: none; color: blue;}
+  .footer-parterners{width: 100%;}
+  @media(max-width: 700px) {
+    .legal-links{
+      grid-template-columns: 1fr;
+    }
+    .footer-nav-wrapper{display: none;}
+}
+
+</style>
+
+<style>
+  .mobile-menu {
+  width: 100%;
+  max-width: 400px;
+  background: #f3f4f6;
+  padding: 10px 0;
+  font-family: system-ui, sans-serif;
+  display: none;
+}
+
+.menu-item {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.menu-toggle {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 16px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.arrow {
+  transition: transform 0.3s ease;
+}
+
+.menu-item.open .arrow {
+  transform: rotate(180deg);
+}
+
+.menu-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+  padding: 0 20px;
+}
+
+.menu-item.open .menu-content {
+  max-height: 500px;
+  padding-bottom: 12px;
+}
+
+.menu-content p {
+  font-size: 14px;
+  padding: 6px 0;
+  color: #111827;
+}
+
+.menu-content small {
+  display: block;
+  margin: 10px 0 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #9ca3af;
+  text-transform: uppercase;
+}
+
+  @media(max-width: 700px) {
+    .mobile-menu{display: block;}
+}
+</style>
+
+<script>
+  document.querySelectorAll(".menu-toggle").forEach(toggle => {
+    toggle.addEventListener("click", () => {
+      const item = toggle.closest(".menu-item");
+
+      // close other sections
+      document.querySelectorAll(".menu-item.open").forEach(openItem => {
+        if (openItem !== item) openItem.classList.remove("open");
+      });
+
+      // toggle current
+      item.classList.toggle("open");
+    });
+  });
+</script>
+
+<style>
+  .xm-drawer {
+  position: fixed;
+  inset: 0;
+  background: #fff;
+  z-index: 2000;
+  transform: translateX(100%);
+  transition: transform .35s ease;
+}
+
+
+.xm-drawer-content {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  height: 100%;
+}
+
+.xm-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.xm-menu-toggle {
+  background: none;
+  border: none;
+  padding: 14px 6px;
+  font-size: 15px;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.xm-caret {
+  transition: transform .25s ease;
+}
+
+.xm-menu-toggle.active .xm-caret {
+  transform: rotate(180deg);
+}
+
+.xm-menu-panel {
+  display: none;
+  padding-left: 10px;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.xm-menu-panel p {
+  font-size: 14px;
+  color: #444;
+}
+
+.xm-menu-link {
+  padding: 14px 6px;
+  font-size: 15px;
+}
+
+.xm-menu-external {
+  background: #f1f8ff;
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  text-decoration: none;
+  color: #000;
+}
+
+.xm-divider {
+  height: 1px;
+  background: #eee;
+}
+
+.xm-language {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.xm-language img {
+  height: 18px;
+}
+
+.xm-store-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.xm-store-buttons img {
+  height: 38px;
+}
+
+.xm-primary-btn {
+  background: #0b1a2d;
+  color: #fff;
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.xm-secondary-btn {
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+</style>
+
+<script>
+document.querySelectorAll(".xm-menu-toggle").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const panel = btn.nextElementSibling;
+    const open = btn.classList.toggle("active");
+
+    panel.style.display = open ? "flex" : "none";
+
+    document.querySelectorAll(".xm-menu-toggle").forEach(other => {
+      if (other !== btn) {
+        other.classList.remove("active");
+        other.nextElementSibling.style.display = "none";
+      }
+    });
+  });
+});
+</script>
+
+
+<style>
+  /*gradient text white up fade to gray down*/
+  .text-gradient-vertical {
+  background: linear-gradient(to bottom, #fff 0%, #fff 50%, #9aa4c7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+</style>
+
+
+<style>
+  .fade{opacity:0;transform:translateY(50px);transition:.8s ease}
+</style>
+
+<script>
+  /* SCROLL ANIMATION */
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.style.opacity=1;
+      e.target.style.transform="translateY(0)";
+    }
+  });
+},{threshold:.15});
+
+document.querySelectorAll(".fade").forEach(el=>observer.observe(el));
+</script>
+
+<script>
+
+/* ================================
+   GOOGLE API
+================================ */
+const API = "https://script.google.com/macros/s/AKfycbyo6uGNQ_IDRTkm5AEzPPRLkdzarH8BUzETivaZ8pFl1eq82j6FwYwj_vK8AfeGBKmX-Q/exec";
+
+
+/* ================================
+   VERIFY SESSION ON LOAD
+================================ */
+window.addEventListener("load", async () => {
+
+  const uid = localStorage.getItem("uid");
+
+  // no session → stay on page
+  if(!uid) return;
+
+  try{
+
+    const res = await fetch(API,{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body: JSON.stringify({
+        action:"getUser",
+        uid: uid
+      })
+    });
+
+    const data = await res.json();
+
+    // valid user → redirect
+    if(data.status){
+      window.location.replace("dashboard.html");
+    }else{
+      // invalid uid → clean storage
+      localStorage.removeItem("uid");
+    }
+
+  }catch(err){
+
+    // if API fails, don't trap the user
+    console.log("Session check failed");
+
+  }
+
+});
+
+</script>
+
+

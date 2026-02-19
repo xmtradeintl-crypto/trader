@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>FX Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        /* GLOBAL */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Segoe UI;
+            background: #06121f;
+            color: #e6eefc;
+        }
+
+        /* HEADER */
+        .header {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            background:#071a2f;
+            font-weight: 700;
+            z-index: 20;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.25), 0 1px 0 rgba(255,255,255,0.03) inset;
+
+
+        }
+
+        /* LOGIN SCREEN */
+
+        .loginWrap {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loginCard {
+            background: #081a2e;
+            padding: 40px;
+            border-radius: 14px;
+            width: 95%;
+            max-width: 420px;
+        }
+
+        .loginCard h2 {
+            margin-top: 0;
+            text-align: center;
+        }
+
+        /* LAYOUT */
+
+        .container {
+            display: flex;
+            height: calc(100vh - 70px);
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            width: 210px;
+            background: #081a2e;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .main {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        /* USER */
+
+        .user {
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, .04);
+            cursor: pointer;
+        }
+
+        .user:hover {
+            background: #0d2744;
+        }
+
+        /* CARD */
+
+        .card {
+            background: #081a2e;
+            padding: 25px;
+            border-radius: 14px;
+            max-width: 900px;
+            border: #ffffff17 solid 1px;
+        }
+
+        /* GRID */
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        /* INPUT */
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, .05);
+            background: #06121f;
+            color: white;
+        }
+
+        /* BUTTON */
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #1f7bff, #4da3ff);
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* login button only */
+        .loginCard button {
+            width: auto;
+            display: block;
+            margin: 20px auto 0 auto;
+            padding: 14px 40px;
+        }
+
+
+        button:disabled {
+            opacity: .6;
+        }
+
+        /* DELETE BUTTON */
+
+        .deleteBtn {
+            background: linear-gradient(90deg, #ff3b3b, #ff6b6b);
+        }
+
+        /* SWITCH */
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .switch input {
+            display: none;
+        }
+
+        .slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #1a293a;
+            border-radius: 30px;
+        }
+
+        .slider:before {
+            content: "";
+            position: absolute;
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: .3s;
+        }
+
+        input:checked+.slider {
+            background: #1f7bff;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(24px);
+        }
+
+        /* LOADING */
+
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(2, 10, 20, .85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: .2s;
+            z-index: 30;
+        }
+
+        .loading.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid rgba(255, 255, 255, .1);
+            border-top: 6px solid #4da3ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* TOAST */
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #0b2a4d;
+            padding: 16px 26px;
+            border-radius: 10px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: .3s;
+            z-index: 50;
+
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .search {
+            width: 90%;
+            margin: 15px;
+            margin-top: 25px;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            background: #06121f;
+            color: white;
+        }
+
+        /* MOBILE */
+
+        @media(max-width:900px) {
+
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: 250px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        /* HAMBURGER */
+
+        .hamburger {
+            display: none;
+            font-size: 26px;
+            cursor: pointer;
+        }
+
+        /* HEADER BUTTON (logout) */
+        .header button {
+            width: auto;
+            padding: 10px 22px;
+            margin-top: 0;
+        }
+
+
+        /* MOBILE DRAWER */
+
+        @media(max-width:900px) {
+
+            .header {
+                position: relative;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                display: flex;
+                flex-direction: column;
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 260px;
+                height: calc(100% - 70px);
+                z-index: 10;
+                transition: .3s;
+                box-shadow: 0 0 20px rgba(0, 0, 0, .6);
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .main {
+                padding: 20px;
+            }
+
+        }
+
+        /* ===============================
+   GLOBAL FX DARK SCROLLBAR
+   Applies to ALL scroll elements
+=============================== */
+
+*{
+  scrollbar-width: thin;                     /* Firefox */
+  scrollbar-color: #102a53 #071224;          /* thumb | track */
+}
+
+/* Chrome, Edge, Safari */
+*::-webkit-scrollbar{
+  width:10px;
+  height:10px;
+}
+
+*::-webkit-scrollbar-track{
+  background:#071224;                        /* deep navy track */
+}
+
+*::-webkit-scrollbar-thumb{
+  background:linear-gradient(
+    180deg,
+    #1e3a8a,
+    #2563eb
+  );
+  border-radius:12px;
+  border:2px solid #071224;
+  transition:0.25s;
+}
+
+*::-webkit-scrollbar-thumb:hover{
+  background:linear-gradient(
+    180deg,
+    #2563eb,
+    #3b82f6
+  );
+}
+
+/* Optional — smoother scrolling feel */
+html{
+  scroll-behavior:smooth;
+}
+
+    </style>
+</head>
+
+<body>
+
+    <div id="loginScreen" class="loginWrap">
+
+        <div class="loginCard">
+            <h2>Admin Login</h2>
+
+            <label>Email</label>
+            <input id="adminUser" type="email" placeholder="Enter admin email" style="margin-bottom: 20px;"> 
+
+            <label>Password</label>
+            <input id="adminPass" type="password" placeholder="Enter password">
+
+
+            <button onclick="adminLogin()">Login</button>
+
+        </div>
+    </div>
+
+    <div id="adminApp" style="display:none;">
+
+        <div class="header">
+
+            <div style="display:flex;align-items:center;gap:15px;">
+                <div class="hamburger" onclick="toggleDrawer()">☰</div> 
+                <img src="images/xm-logo-white.png" alt="" style="height: 45px;">
+                <P style="font-weight: bold;">ADMIN PAGE</P> 
+            </div>
+
+            <button onclick="logout()">Logout</button>
+
+        </div>
+
+
+        <div class="container">
+
+            <div class="sidebar">
+                <div style="position: sticky; top: 0; background:#081a2e;">
+                    <input class="search" placeholder="Search trader..." onkeyup="searchUser(this.value)">
+                </div>
+
+                <div id="userList"></div>
+            </div>
+
+            <div class="main" id="profile">
+               <div class="card">
+
+            <h2>Central Wallet</h2>
+
+            <label>Platform Wallet Address</label>
+            <input id="globalWallet" placeholder="Loading wallet...">
+
+            <button onclick="saveGlobalWallet()">
+            Update Wallet
+            </button>
+
+            </div>
+
+            <br>
+
+            <h2 style="text-align:center;margin-top:40px;">
+            Select a User Account
+            </h2>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- LOADING -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+<script>
+
+const API = "https://script.google.com/macros/s/AKfycbyo6uGNQ_IDRTkm5AEzPPRLkdzarH8BUzETivaZ8pFl1eq82j6FwYwj_vK8AfeGBKmX-Q/exec";
+let adminToken = null;
+let allUsers = [];
+
+
+/* ===============================
+   SAFE FETCH (ANTI-FREEZE)
+================================ */
+
+async function safeFetch(payload){
+
+    try{
+
+        const res = await fetch(API,{
+            method:"POST",
+            headers:{
+                "Content-Type":"text/plain;charset=utf-8"
+            },
+            body:JSON.stringify(payload)
+        });
+
+        const text = await res.text();
+
+        let data;
+
+        try{
+            data = JSON.parse(text);
+        }catch{
+            throw new Error("Invalid JSON from server");
+        }
+
+        // SESSION EXPIRED
+        if(
+            data.message === "Unauthorized" ||
+            data.sessionExpired === true
+        ){
+            hideLoading();
+
+            toast("Session expired. Please login again.");
+
+            setTimeout(()=>{
+                localStorage.removeItem("adminToken");
+                location.reload();
+            },1500);
+
+            return null;
+        }
+
+        return data;
+
+    }catch(err){
+
+        console.error("FETCH ERROR:",err);
+
+        hideLoading();
+        toast("Network / Server error");
+
+        return null;
+    }
+}
+
+
+/* UI */
+
+function toggleDrawer() {
+    document.querySelector(".sidebar").classList.toggle("open");
+}
+
+function showLoading() { loading.classList.add("show"); }
+function hideLoading() { loading.classList.remove("show"); }
+
+function toast(msg) {
+    const t = document.getElementById("toast");
+    t.innerText = msg;
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 2500);
+}
+
+
+/* ===============================
+   LOGIN
+================================ */
+
+async function adminLogin(){
+
+    showLoading();
+
+    const data = await safeFetch({
+        action:"adminLogin",
+        email:adminUser.value.trim(),
+        password:adminPass.value.trim()
+    });
+
+    hideLoading();
+
+    if(!data) return;
+
+    if(!data.status){
+        toast("Invalid admin login");
+        return;
+    }
+
+    adminToken = data.token;
+    localStorage.setItem("adminToken",adminToken);
+
+    startAdmin();
+}
+
+
+/* AUTO LOGIN */
+
+function startAdmin(){
+
+    document.getElementById("loginScreen").style.display="none";
+    document.getElementById("adminApp").style.display="block";
+
+    loadWallet();   // ✅ FIX ADDED
+    loadUsers();
+}
+
+
+function logout(){
+    localStorage.removeItem("adminToken");
+    location.reload();
+}
+
+window.onload = ()=>{
+
+    const token = localStorage.getItem("adminToken");
+
+    if(token){
+        adminToken = token;
+        startAdmin();
+    }
+};
+
+
+/* ===============================
+   GLOBAL WALLET
+================================ */
+
+async function loadWallet(){
+
+    showLoading();
+
+    const data = await safeFetch({
+        action:"getGlobalWallet", // ✅ CORRECT ENDPOINT
+        token:adminToken
+    });
+
+    hideLoading();
+
+    if(!data) return;
+
+    if(!data.status){
+        toast(data.message || "Failed to load wallet");
+        return;
+    }
+
+    const input = document.getElementById("globalWallet");
+
+    if(input){
+        input.value = data.wallet || "";
+    }
+}
+
+async function saveGlobalWallet(){
+
+    const input = document.getElementById("globalWallet");
+
+    if(!input){
+        toast("Wallet input not found");
+        return;
+    }
+
+    const wallet = input.value.trim();
+
+    if(!wallet){
+        toast("Enter a wallet address");
+        return;
+    }
+
+    showLoading();
+
+    const data = await safeFetch({
+        action:"updateGlobalWallet",
+        token:adminToken,
+        wallet
+    });
+
+    hideLoading();
+
+    if(!data) return;
+
+    if(!data.status){
+        toast(data.message || "Failed to update wallet");
+        return;
+    }
+
+    toast("Central wallet updated ✔");
+}
+
+
+/* ===============================
+   USERS
+================================ */
+
+async function loadUsers(){
+
+    showLoading();
+
+    const data = await safeFetch({
+        action:"getAllUsers",
+        token:adminToken
+    });
+
+    hideLoading();
+
+    if(!data) return;
+
+    if(!data.status){
+        toast(data.message || "Failed to load users");
+        return;
+    }
+
+    allUsers = data.users.reverse();
+    renderUsers(allUsers);
+}
+
+
+function renderUsers(users){
+
+    userList.innerHTML="";
+
+    // ⭐ ADMIN OPTION
+    const adminDiv = document.createElement("div");
+    adminDiv.className = "user";
+    adminDiv.style.background = "#0d2744";
+    adminDiv.style.fontWeight = "700";
+
+    adminDiv.innerHTML = `
+    ⚙️ Admin Panel
+    `;
+
+    adminDiv.onclick = loadAdminCard;
+
+    userList.appendChild(adminDiv);
+
+
+    // USERS
+    users.forEach(u=>{
+
+        const div=document.createElement("div");
+        div.className="user";
+
+        div.innerHTML=`
+<strong>${u.name || "No Name"}</strong><br>
+<span style="font-size:12px">${u.uid}</span>
+`;
+
+        div.onclick=()=>loadProfile(u.uid);
+
+        userList.appendChild(div);
+
+    });
+
+}
+
+
+function searchUser(text){
+
+    text=text.toLowerCase();
+
+    renderUsers(allUsers.filter(u=>
+        (u.name||"").toLowerCase().includes(text) ||
+        u.uid.toLowerCase().includes(text)
+    ));
+}
+
+
+/* ===============================
+   PROFILE
+================================ */
+function loadAdminCard(){
+
+profile.innerHTML = `
+
+<div class="card">
+
+<h2>Central Wallet</h2>
+
+<label>Platform Wallet Address</label>
+<input id="globalWallet" placeholder="Loading wallet...">
+
+<button onclick="saveGlobalWallet()">
+Update Wallet
+</button>
+
+</div>
+
+`;
+
+loadWallet(); // reload wallet into the input
+}
+
+
+
+
+async function loadProfile(uid){
+
+    showLoading();
+
+    const data = await safeFetch({
+        action:"getUser",
+        uid,
+        token:adminToken
+    });
+
+    hideLoading();
+
+    if(!data) return;
+
+    if(!data.status){
+        toast("Failed to load profile");
+        return;
+    }
+
+    const u = data.user;
+
+    profile.innerHTML=`
+
+<div class="card">
+
+<h2>${u.name}</h2>
+
+<div class="grid">
+
+<div>
+<label>Full Name</label>
+<input id="name" value="${u.name || ""}">
+</div>
+
+<div>
+<label>Email</label>
+<input id="email" value="${u.email || ""}">
+</div>
+
+<div>
+<label>Password</label>
+<input id="password" value="${u.password || ""}">
+</div>
+
+<div>
+<label>Country</label>
+<input id="country" value="${u.country || ""}">
+</div>
+
+<div>
+<label>Balance</label>
+<input id="balance" value="${u.balance || 0}">
+</div>
+
+<div>
+<label>Equity</label>
+<input id="equity" value="${u.equity || 0}">
+</div>
+
+<div>
+<label>Profit</label>
+<input id="profit" value="${u.profit || 0}">
+</div>
+
+<div>
+<label>Volume</label>
+<input id="volume" value="${u.volume || 0}">
+</div>
+
+<div>
+<label>Account Status</label>
+<input id="statusAcc" value="${u.statusAcc || ""}">
+</div>
+
+<div>
+<label>Verified</label><br><br>
+<label class="switch">
+<input type="checkbox" id="verified" ${u.verified ? "checked" : ""}>
+<span class="slider"></span>
+</label>
+</div>
+
+</div>
+
+<button onclick="saveUser('${uid}')">Save Changes</button>
+<button class="deleteBtn" onclick="deleteUser('${uid}')">Delete User</button>
+
+</div>
+`;
+}
+
+
+/* ===============================
+   SAVE
+================================ */
+
+async function saveUser(uid){
+
+    showLoading();
+
+    const data = await safeFetch({
+        action:"updateUser",
+        token:adminToken,
+        uid,
+        name:name.value,
+        email:email.value,
+        password:password.value,
+        country:country.value,
+        balance:balance.value,
+        equity:equity.value,
+        profit:profit.value,
+        volume:volume.value,
+        statusAcc:statusAcc.value,
+        verified:verified.checked
+    });
+
+    hideLoading();
+
+    if(!data) return;
+
+    toast("User updated");
+    loadUsers();
+}
+
+
+/* ===============================
+   DELETE
+================================ */
+
+async function deleteUser(uid){
+
+    if(!confirm("Delete this user permanently?")) return;
+
+    showLoading();
+
+    const data = await safeFetch({
+        action:"deleteUser",
+        uid,
+        token:adminToken
+    });
+
+    hideLoading();
+
+    if(!data) return;
+
+    toast("User deleted");
+
+    profile.innerHTML="<h2>Select a Trader</h2>";
+    loadUsers();
+}
+
+</script>
+
+
+
+</body>
+
+</html>

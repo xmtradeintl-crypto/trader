@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>XM – Login</title>
+
+<style>
+:root{
+  --bg:#0f172a;
+  --card:#0b1220;
+  --border:rgba(255,255,255,.08);
+  --text:#e5e7eb;
+  --muted:#9ca3af;
+  --blue:#1f7bff;
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Segoe UI,Roboto,Arial,sans-serif;
+}
+
+/* 🔒 ROOT HEIGHT CONTROL */
+html, body{
+  background:var(--bg);
+}
+
+/* 📐 CONSISTENT VIEWPORT HEIGHT */
+.content{
+  height:100dvh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* 🪟 LOGIN CARD */
+.login-card{
+  display:flex;
+  flex-direction:column;
+  width:100%;
+  max-width:420px;
+  background:var(--card);
+  border-radius:16px;
+  padding:26px;
+  border:1px solid var(--border);
+}
+
+/* HEADER */
+.login-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:22px;
+}
+
+.logo-wrap img{height:50px}
+
+.header-icons{
+  display:flex;
+  gap:14px;
+}
+.icon-wrap{
+  width:25px;
+  height:25px;
+}
+.icon-wrap img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  opacity:.9;
+  cursor:pointer;
+}
+
+/* TEXT */
+h1{
+  color:var(--text);
+  font-size:22px;
+  margin-bottom:6px;
+}
+
+.sub{
+  font-size:16px;
+  color:var(--muted);
+  margin-bottom:20px;
+}
+.sub a{
+  color:var(--blue);
+  text-decoration:none;
+  font-weight:600;
+}
+
+/* INPUTS */
+.field{
+  width:100%;
+  background:none;
+  display: flex;
+  align-items: center;
+  border:2px solid var(--border);
+  border-radius:12px;
+  padding:14px 16px;
+  font-size:15px;
+  color:#fff;
+  margin-bottom:14px;
+}
+
+.field::placeholder{color:#9aa3b2}
+
+.pass-wrap{
+  position:relative;
+}
+.eye{
+  position:absolute;
+  right:14px;
+  top:50%;
+  transform:translateY(-50%);
+  width:20px;
+  height:20px;
+  cursor:pointer;
+}
+.eye img{
+  width:100%;
+  height:100%;
+  opacity:.7;
+}
+
+/* LINKS */
+.forgot{
+  font-size:16px;
+  color:var(--blue);
+  display:inline-block;
+  margin:6px 0 20px;
+  text-decoration:none;
+  font-weight:600;
+}
+
+/* BUTTON */
+.btn{
+  width:100%;
+  border:none;
+  border-radius:12px;
+  padding:14px;
+  background:#1664d9;
+  color:#fff;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+/* ERROR */
+.error{
+  display:none;
+  color:#ff6b6b;
+  font-size:14px;
+  margin-top:14px;
+  text-align:center;
+}
+
+/* 📱 MOBILE */
+@media (max-width:700px){
+  .login-card{
+    max-width:none;
+    border-radius:0px;
+    height:100%;
+    justify-content:space-between;
+  }
+}
+</style>
+
+<style>
+  * {
+  -webkit-tap-highlight-color: transparent;
+  }
+</style>
+
+</head>
+
+<body>
+
+<div class="content">
+
+  <div class="login-card">
+
+    <!-- 🔝 TOP -->
+    <div>
+      <div class="login-header">
+        <div class="logo-wrap">
+          <img src="images/xm-logo-white.png" alt="XM">
+        </div>
+        <div class="header-icons">
+          <div class="icon-wrap"><img src="images/support-icon.png"></div>
+          <div class="icon-wrap"><img src="images/uk-flag.png"></div>
+        </div>
+      </div>
+
+      <h1>Login</h1>
+      <div class="sub">New to XM? <a href="register.html">Open an account</a></div>
+
+      <input id="email" class="field" type="email" placeholder="Email">
+
+      <div class="pass-wrap">
+        <input id="password" class="field" type="password" placeholder="Password">
+        <div class="eye" onclick="togglePassword()">
+          <img id="eyeIcon" src="images/eye-off.svg">
+        </div>
+      </div>
+
+      <a class="forgot" href="#">Forgot your password?</a>
+    </div>
+
+    <!-- 🔻 BOTTOM -->
+    <div>
+      <button class="btn" onclick="login()">Login</button>
+      <div id="errorMsg" class="error">
+        No account matches these login credentials
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+/* =====================================
+   GOOGLE API
+===================================== */
+const API = "https://script.google.com/macros/s/AKfycbyo6uGNQ_IDRTkm5AEzPPRLkdzarH8BUzETivaZ8pFl1eq82j6FwYwj_vK8AfeGBKmX-Q/exec";
+
+
+/* =====================================
+   VERIFY EXISTING SESSION
+===================================== */
+window.addEventListener("load", async ()=>{
+
+  const uid = localStorage.getItem("uid");
+  if(!uid) return;
+
+  try{
+
+    const res = await fetch(API,{
+      method:"POST",
+      headers:{
+        "Content-Type":"text/plain;charset=utf-8"
+      },
+      body: JSON.stringify({
+        action:"getUser",
+        uid: uid
+      })
+    });
+
+    const text = await res.text();
+    if(!text.startsWith("{")) return;
+
+    const data = JSON.parse(text);
+
+    if(data.status){
+      window.location.replace("dashboard.html");
+    }else{
+      localStorage.removeItem("uid");
+    }
+
+  }catch{
+    // silent fail — user can still login
+  }
+
+});
+
+
+/* =====================================
+   PASSWORD TOGGLE
+===================================== */
+let passVisible = false;
+
+function togglePassword(){
+  const pass = document.getElementById("password");
+  const icon = document.getElementById("eyeIcon");
+
+  passVisible = !passVisible;
+  pass.type = passVisible ? "text" : "password";
+
+  if(icon){
+    icon.src = passVisible
+      ? "images/eye-on.svg"
+      : "images/eye-off.svg";
+  }
+}
+
+
+/* =====================================
+   LOGIN
+===================================== */
+let loggingIn = false;
+
+async function login(){
+
+  if(loggingIn) return;
+  loggingIn = true;
+
+  const btn = document.querySelector(".btn");
+  const error = document.getElementById("errorMsg");
+
+  btn.textContent = "Logging in...";
+  btn.disabled = true;
+
+  if(error) error.style.display = "none";
+
+  const email = document.getElementById("email").value.trim().toLowerCase();
+  const password = document.getElementById("password").value.trim();
+
+  if(!email || !password){
+    showError("Enter email and password");
+    resetBtn();
+    return;
+  }
+
+  try{
+
+    const payload = {
+      action:"login",
+      email,
+      password
+    };
+
+    const res = await fetch(API,{
+      method:"POST",
+
+      // ⭐ THIS FIXES YOUR NETWORK ERROR
+      headers:{
+        "Content-Type":"text/plain;charset=utf-8"
+      },
+
+      body: JSON.stringify(payload)
+    });
+
+    const text = await res.text();
+
+    if(!text.startsWith("{")){
+      throw new Error("Invalid server response");
+    }
+
+    const data = JSON.parse(text);
+
+    if(!data.status){
+      showError("Invalid login credentials");
+      resetBtn();
+      return;
+    }
+
+    /* SAVE SESSION */
+    localStorage.setItem("uid", data.user.uid);
+
+    /* HARD REDIRECT */
+    window.location.replace("dashboard.html");
+
+  }catch(err){
+
+    console.error(err);
+    showError("Connection error — try again");
+    resetBtn();
+  }
+}
+
+
+/* =====================================
+   HELPERS
+===================================== */
+function showError(msg){
+  const error = document.getElementById("errorMsg");
+  if(!error) return;
+
+  error.textContent = msg;
+  error.style.display = "block";
+}
+
+function resetBtn(){
+  loggingIn = false;
+
+  const btn = document.querySelector(".btn");
+  btn.textContent = "Login";
+  btn.disabled = false;
+}
+
+
+/* =====================================
+   ENTER KEY SUPPORT
+===================================== */
+document.addEventListener("keydown", e=>{
+  if(e.key === "Enter"){
+    login();
+  }
+});
+
+</script>
+
+
+
+
+</body>
+</html>
+
+
