@@ -38,7 +38,7 @@
     }
 
     .status {
-    font-size: 13px;
+    font-size: 16px;
     padding: 3px 8px;
     border-radius: 12px;
     background: #002b16;
@@ -474,7 +474,140 @@
       * {
       -webkit-tap-highlight-color: transparent;
       }
-    </style>    
+    </style> 
+    
+    <style>
+
+    .user-portfolio-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    .user-portfolio-small{ font-size:13px; color:#8a8f98; }
+
+    .user-portfolio-dropdown{
+      background:#262a33;
+      padding:6px 12px;
+      border-radius:12px;
+      font-size:13px;
+      color:#d1d5db;
+    }
+
+    .user-portfolio-balance{
+      font-size:36px;
+      font-weight:700;
+      margin:10px 0 10px;
+    }
+
+    .user-porfolio-badge{
+      background:rgba(34,197,94,0.15);
+      color:#22c55e;
+      padding:5px 10px;
+      border-radius:8px;
+      font-size:12px;
+      font-weight:600;
+      margin-right:8px;
+    }
+
+    .user-portfolio-green{ color:#22c55e; font-weight:600; }
+
+    .user-porfolio-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:14px 0;
+      border-top:1px solid #22252c;
+      font-size:14px;
+    }
+
+    .user-porfolio-label{
+      color:#8a8f98;
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+
+    .user-portfolio-info{
+      width:14px;height:14px;border-radius:50%;
+      background:#2b303a;font-size:10px;
+      display:flex;align-items:center;justify-content:center;
+      color:#9aa0a6;
+    }
+
+    .user-portfolio-data-wrapper{ width:100%;padding: 20px;}
+
+    .user-portfolio-card{
+      background:#1927447a;
+      border-radius:22px;
+      padding:22px;
+      margin-bottom:22px;
+    }
+
+    .portfolioChart-title-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:15px;
+    }
+
+    .portfolioChart-box{
+      position:relative;
+      height:260px;
+    }
+
+    /* Axis */
+    .user-porfolio-axis{
+      position:absolute;
+      right:0;
+      top:0;
+      height:100%;
+      width:65px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      font-size:12px;
+      color:#8a8f98;
+      text-align:right;
+      z-index:1;
+    }
+
+    /* High line limited to portfolioChart area only */
+    .high-line{
+      position:absolute;
+      left:0;
+      width:calc(100% - 65px);
+      border-top:1px dashed #3b82f6;
+      opacity:.5;
+      z-index:1;
+    }
+
+    .high-label{
+      position:absolute;
+      font-size:12px;
+      color:#9aa0a6;
+      z-index:2;
+    }
+
+    /* Blue profit badge ABOVE axis */
+    .high-badge{
+      position:absolute;
+      right:0; /* overlap onto axis */
+      background:#2563eb;
+      padding:6px 10px;
+      border-radius:8px;
+      font-size:12px;
+      font-weight:600;
+      z-index:5; /* ensure above scale */
+    }
+
+    #portfolioChart{
+      width:100%;
+      height:100%;
+    }
+    </style>
+
+
 
 </head>
 <body>
@@ -483,9 +616,8 @@
 
   <!-- ================= FLOATING TOP BAR ================= -->
   <header class="top-bar">
-    <div class="balance-box">
-      <span class="balance" id="userBalance">$0.00</span>
-      <span class="status" id="accountStatus">Loading...</span>
+    <div class="balance-box"><span>Hello, </span>
+      <span class="balance" id="fontPageProfileName"></span>
     </div>
 
     <div class="top-actions">
@@ -500,14 +632,78 @@
 
     <!-- PAGE 1 -->
     <section class="page active" id="page-markets">
+
+        <div class="user-portfolio-data-wrapper">
+
+        <div class="user-portfolio-card">
+          <div class="user-portfolio-header">
+            <div class="status"  id="accountStatus">Wallet Loading...</div>
+            <div class="user-portfolio-dropdown">Ytd ▾</div>
+          </div>
+
+          <div class="user-portfolio-balance" id="userBalance">$------</div>
+
+          <div>
+            <span class="user-porfolio-badge" id="profitPercentage">---%</span>
+            <span class="user-portfolio-green" id="totalInvested1">$------</span>
+          </div>
+
+          <div class="user-porfolio-row">
+            <div class="user-porfolio-label">Total Profit <div class="user-portfolio-info">i</div></div>
+            <div>
+              <span class="user-porfolio-badge" id="profitPercentage2">---%</span>
+              <span class="user-portfolio-green" id="frontPageProfit">$------</span>
+            </div>
+          </div>
+
+          <div class="user-porfolio-row">
+            <div class="user-porfolio-label" >Realised Profit <div class="user-portfolio-info">i</div></div>
+            <div id="frontPageRealisedProfit">$------</div>
+          </div>
+
+          <div class="user-porfolio-row">
+            <div class="user-porfolio-label">Unrealised Profit <div class="user-portfolio-info">i</div></div>
+            <div class="user-portfolio-green" id="frontPageUnrealisedProfit">$------</div>
+          </div>
+
+          <div class="user-porfolio-row">
+            <div class="user-porfolio-label">Total Invested</div>
+            <div id="totalInvested2">$------</div>
+          </div>
+        </div>
+
+        <div class="user-portfolio-card">
+
+          <div class="portfolioChart-title-row">
+            <div style="font-size:18px;font-weight:600;">Portfolio Chart</div>
+            <div style="background:#262a33;width:34px;height:34px;border-radius:12px;display:flex;align-items:center;justify-content:center;">⚙</div>
+          </div>
+
+          <div class="portfolioChart-box">
+            <svg id="portfolioChart"></svg>
+            <div id="highLine" class="high-line"></div>
+            <div id="highLabel" class="high-label"></div>
+            <div id="highBadge" class="high-badge"></div>
+            <div id="userPortfolioAxis" class="user-porfolio-axis"></div>
+          </div>
+
+        </div>
+
+        </div>
+
+
         <div style="width: 35%;height: 8px;border-radius: 50px;background-color: #ffffff28;margin-left: 20px;">
             <div style="width: 30%;height: 8px;border-radius: 50px;background-color: #01b93f;"></div>
         </div>
-        <div class="promo">
-            <h3>Finish setting up your account 🎁</h3>
-            <p style="color: #ffffff88;">Complete all steps to unlock <strong style="color: orange;">50% deposit bonus</strong></p>
-            <p style="background-color: white;color: #0c1324;padding: 8px 12px;border-radius: 8px; width: fit-content;font-weight: 600; cursor: pointer;margin-top:18px">Complete</p>
-        </div>
+
+        <!--
+          <div class="promo">
+              <h3>Finish setting up your account 🎁</h3>
+              <p style="color: #ffffff88;">Complete all steps to unlock <strong style="color: orange;">50% deposit bonus</strong></p>
+              <p style="background-color: white;color: #0c1324;padding: 8px 12px;border-radius: 8px; width: fit-content;font-weight: 600; cursor: pointer;margin-top:18px">Complete</p>
+          </div>        
+        -->
+
 
         <div class="offers">
             <div class="offer-card">
@@ -1956,7 +2152,7 @@
 
 .toast{
     position: fixed;
-    bottom: 30px;
+    bottom: 150px;
     right: 30px;
     background: #0b2a4d;
     color: #fff;
@@ -4464,7 +4660,7 @@ function num(val){
 }
 
 function money(val){
-  return "$" + num(val).toLocaleString();
+ return "$" + num(val).toLocaleString(); 
 }
 
 function setText(id,val){
@@ -4483,6 +4679,8 @@ function render(user){
   const equity  = num(user.equity);
   const profit  = num(user.profit);
   const volume  = num(user.volume);
+  const totalInvested = balance-profit;
+  const profitPercentage = profit/balance*100;
 
   /* BALANCE */
   setText("userBalance", money(balance));
@@ -4494,11 +4692,19 @@ function render(user){
   /* METRICS */
   setText("walletEquity", money(equity));
   setText("walletProfit", money(profit));
-  setText("tradingVolume", "$" + volume.toLocaleString() + "/$100,000");
+  setText("frontPageProfit", money(profit));  
+  setText("frontPageRealisedProfit", money(profit) );    
+  setText("frontPageUnrealisedProfit", "$0.00");  
+  setText("totalInvested1", money(totalInvested) ) ;
+  setText("totalInvested2", money(totalInvested) ) ;
+  setText("profitPercentage", Math.round((totalInvested/balance*100) * 100) / 100+"%");  
+  setText("profitPercentage2", Math.round(profitPercentage  * 100) / 100 +"%");   
+  setText("tradingVolume", money(volume) + "/$100,000");
   setText("portfolioValue", money(equity));
 
   /* PROFILE */
   setText("profileName", user.name);
+  setText("fontPageProfileName", user.name);
   setText("profileEmail", user.email);
 
   /* STATUS */
@@ -4507,6 +4713,18 @@ function render(user){
   window.platformWallet = user.walletaddress || "";
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* ===============================
@@ -5370,9 +5588,153 @@ function copyWallet(){
 </script>
 
 
+    <script>
 
 
+    // ===== USER PROFIT =====
+    const currentProfit = 302398;
 
+    // ===== SETUP =====
+    const userPortfolioSVG = document.getElementById("portfolioChart");
+    const userPortfolioAxis = document.getElementById("userPortfolioAxis");
+    const highLine = document.getElementById("highLine");
+    const highBadge = document.getElementById("highBadge");
+    const highLabel = document.getElementById("highLabel");
+
+    const totalWidth = 390;
+    const axisWidth = 65;          // reserved space for scale
+    const width = totalWidth - axisWidth; // portfolioChart drawing width
+    const height = 260;
+
+    userPortfolioSVG.setAttribute("viewBox", `0 0 ${totalWidth} ${height}`);
+
+    // ===== SCALE =====
+    const intervals = 6;
+    const step = currentProfit / intervals;
+
+    let scaleValues = [];
+    for(let i=intervals;i>=1;i--){
+      scaleValues.push(step*i);
+    }
+
+    // ===== AXIS =====
+    userPortfolioAxis.innerHTML = "";
+    scaleValues.forEach(v=>{
+      let div = document.createElement("div");
+      div.textContent = (v/1000000).toFixed(2) + " M";
+      userPortfolioAxis.appendChild(div);
+    });
+
+    // ===== GRID LINES (only portfolioChart width) =====
+    scaleValues.forEach((v,i)=>{
+      const y = (i/(intervals-1))*height;
+      const line = document.createElementNS("http://www.w3.org/2000/svg","line");
+      line.setAttribute("x1",0);
+      line.setAttribute("x2",width);
+      line.setAttribute("y1",y);
+      line.setAttribute("y2",y);
+      line.setAttribute("stroke","#22252c");
+      line.setAttribute("stroke-width","1");
+      userPortfolioSVG.appendChild(line);
+    });
+
+    // ===== DATA =====
+    let data = [];
+    let value = currentProfit * 0.12;
+
+    function noise(scale){
+      return (Math.random() - 0.5) * scale;
+    }
+
+    for(let i=0;i<55;i++){
+      value += noise(currentProfit * 0.007);
+      value += Math.sin(i * 0.5) * currentProfit * 0.0025;
+      data.push(value);
+    }
+
+    for(let i=0;i<30;i++){
+      value += currentProfit * 0.007;
+      value += noise(currentProfit * 0.009);
+      if(i % 7 === 0) value -= currentProfit * 0.012;
+      data.push(value);
+    }
+
+    for(let i=0;i<10;i++){
+      value -= currentProfit * 0.004;
+      value += noise(currentProfit * 0.008);
+      data.push(value);
+    }
+
+    for(let i=0;i<25;i++){
+      value += noise(currentProfit * 0.012);
+      value += Math.sin(i * 1.3) * currentProfit * 0.003;
+      data.push(value);
+    }
+
+    for(let i=0;i<15;i++){
+      value += currentProfit * 0.02;
+      value += noise(currentProfit * 0.01);
+      data.push(value);
+    }
+
+    data[data.length-1] = currentProfit;
+
+    // ===== PATH =====
+    let path = "";
+    data.forEach((val,i)=>{
+      const x = (i/(data.length-1))*width;
+      const y = height - (val/currentProfit)*height;
+      path += i===0 ? `M ${x} ${y}` : ` L ${x} ${y}`;
+    });
+
+    // ===== AREA GRADIENT =====
+    const defs = document.createElementNS("http://www.w3.org/2000/svg","defs");
+    const gradient = document.createElementNS("http://www.w3.org/2000/svg","linearGradient");
+    gradient.setAttribute("id","grad");
+    gradient.setAttribute("x1","0");
+    gradient.setAttribute("y1","0");
+    gradient.setAttribute("x2","0");
+    gradient.setAttribute("y2","1");
+
+    let stop1 = document.createElementNS("http://www.w3.org/2000/svg","stop");
+    stop1.setAttribute("offset","0%");
+    stop1.setAttribute("stop-color","#2563eb");
+    stop1.setAttribute("stop-opacity","0.25");
+
+    let stop2 = document.createElementNS("http://www.w3.org/2000/svg","stop");
+    stop2.setAttribute("offset","100%");
+    stop2.setAttribute("stop-color","#2563eb");
+    stop2.setAttribute("stop-opacity","0");
+
+    gradient.appendChild(stop1);
+    gradient.appendChild(stop2);
+    defs.appendChild(gradient);
+    userPortfolioSVG.appendChild(defs);
+
+    // ===== AREA =====
+    const area = document.createElementNS("http://www.w3.org/2000/svg","path");
+    area.setAttribute("d", path + ` L ${width} ${height} L 0 ${height} Z`);
+    area.setAttribute("fill","url(#grad)");
+    userPortfolioSVG.appendChild(area);
+
+    // ===== LINE =====
+    const line = document.createElementNS("http://www.w3.org/2000/svg","path");
+    line.setAttribute("d", path);
+    line.setAttribute("fill","none");
+    line.setAttribute("stroke","#3b82f6");
+    line.setAttribute("stroke-width","1.4");
+    userPortfolioSVG.appendChild(line);
+
+    // ===== HIGH MARKERS =====
+    highLine.style.top = "0px";
+    highLabel.style.top = "-14px";
+    highLabel.style.left = width * 0.55 + "px";
+    highLabel.textContent = "High: $" + (currentProfit/1000000).toFixed(2) + " M";
+
+    highBadge.style.top = "-10px";
+    highBadge.textContent = (currentProfit/1000000).toFixed(2) + " M";
+
+    </script>
 
 </body>
 </html
