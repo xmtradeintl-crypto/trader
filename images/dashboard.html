@@ -1,0 +1,289 @@
+here is the compilation of all the codes you gave me before. just integrate all these fixes and also make the chart a real line chart that shows the actual data related to the selected item and also make each item interactive to hover and also show pointer selector. give me a fully compiled html with all the modification i asked you to make. let the existing unaffected structure remain the same
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>XM Mobile Replica</title>
+  <link rel="stylesheet" href="css/app.css">
+  <style>
+    * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system;
+}
+
+body {
+  background: #0c1324;
+  color: #fff;
+}
+
+/* ===== TOP BAR ===== */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px;
+}
+
+.badge {
+  background: #1fd18b;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+/* ===== PROMO ===== */
+.promo {
+  margin: 12px;
+  padding: 16px;
+  background: linear-gradient(135deg,#1b2440,#0f1730);
+  border-radius: 12px;
+}
+
+.promo button {
+  margin-top: 10px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+}
+
+/* ===== MARKETS ===== */
+.markets {
+  padding: 12px;
+}
+
+.market-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 0;
+  border-bottom: 1px solid #1a2340;
+}
+
+.market-item .left {
+  display: flex;
+  gap: 10px;
+}
+
+.market-item img {
+  width: 28px;
+  height: 28px;
+}
+
+.symbol {
+  font-weight: 600;
+}
+
+.desc {
+  font-size: 12px;
+  color: #9aa4c7;
+}
+
+.price {
+  font-weight: 600;
+}
+
+.positive { color: #1fd18b; }
+.negative { color: #ff5c5c; }
+
+/* ===== BOTTOM NAV ===== */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  background: #0f1730;
+}
+
+.bottom-nav div {
+  flex: 1;
+  text-align: center;
+  padding: 12px;
+}
+
+/* ===== SLIDE UP PANEL ===== */
+#tradePanel {
+  position: fixed;
+  bottom: -100%;
+  left: 0;
+  width: 100%;
+  height: 80%;
+  background: #0f1730;
+  border-radius: 16px 16px 0 0;
+  transition: bottom .35s ease;
+  padding: 10px;
+}
+
+#tradePanel.active {
+  bottom: 0;
+}
+
+.drag-bar {
+  width: 40px;
+  height: 4px;
+  background: #444;
+  margin: 8px auto;
+  border-radius: 4px;
+}
+
+.trade-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+canvas {
+  width: 100%;
+  height: 220px;
+}
+
+/* ===== TRADE BUTTONS ===== */
+.trade-actions {
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+}
+
+.sell {
+  flex: 1;
+  background: #ff5c5c;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+}
+
+.buy {
+  flex: 1;
+  background: #1fd18b;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+}
+
+  </style>
+</head>
+<body>
+
+<!-- ===== APP HEADER ===== -->
+<header class="top-bar">
+  <div class="balance">
+    $0.00 <span class="badge">Real</span>
+  </div>
+  <div class="icons">
+    <img src="images/icon-placeholder.svg">
+    <img src="images/icon-placeholder.svg">
+    <img src="images/icon-placeholder.svg">
+  </div>
+</header>
+
+<!-- ===== PROMO CARD ===== -->
+<section class="promo">
+  <h3>Finish setting up your account 🎁</h3>
+  <p>Complete all steps to unlock <strong>50% deposit bonus</strong></p>
+  <button>Complete</button>
+</section>
+
+<!-- ===== MARKETS ===== -->
+<section class="markets">
+  <div class="markets-header">
+    <h3>Markets</h3>
+    <img src="images/icon-placeholder.svg">
+  </div>
+
+  <div id="marketList"></div>
+</section>
+
+<!-- ===== BOTTOM NAV ===== -->
+<nav class="bottom-nav">
+  <div>Markets</div>
+  <div>Trades</div>
+  <div>Explore</div>
+  <div>More</div>
+</nav>
+
+<!-- ===== SLIDE UP TRADE PANEL ===== -->
+<div id="tradePanel">
+  <div class="drag-bar"></div>
+
+  <div class="trade-header">
+    <span id="tradeSymbol">BTCUSD</span>
+    <div class="trade-icons">
+      <img src="images/icon-placeholder.svg">
+      <img src="images/icon-placeholder.svg">
+      <img src="images/icon-placeholder.svg">
+    </div>
+  </div>
+
+  <canvas id="chart"></canvas>
+
+  <div class="trade-actions">
+    <button class="sell">SELL<br><span id="sellPrice">--</span></button>
+    <button class="buy">BUY<br><span id="buyPrice">--</span></button>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+  const markets = [
+  { symbol:"GOLD", desc:"GOLD", price:4614.60, change:-0.26 },
+  { symbol:"BTCUSD", desc:"Bitcoin vs US Dollar", price:96574.95, change:-0.99 },
+  { symbol:"USDJPY", desc:"US Dollar vs Japanese Yen", price:158.545, change:0.08 }
+];
+
+const list = document.getElementById("marketList");
+const panel = document.getElementById("tradePanel");
+const tradeSymbol = document.getElementById("tradeSymbol");
+
+markets.forEach(m => {
+  const row = document.createElement("div");
+  row.className = "market-item";
+
+  row.innerHTML = `
+    <div class="left">
+      <img src="images/icon-placeholder.svg">
+      <div>
+        <div class="symbol">${m.symbol}</div>
+        <div class="desc">${m.desc}</div>
+      </div>
+    </div>
+    <div class="right">
+      <div class="price">${m.price.toLocaleString()}</div>
+      <div class="${m.change>=0?"positive":"negative"}">${m.change}%</div>
+    </div>
+  `;
+
+  row.onclick = () => openTrade(m);
+  list.appendChild(row);
+});
+
+function openTrade(market){
+  tradeSymbol.textContent = market.symbol;
+  panel.classList.add("active");
+  drawChart();
+}
+
+/* ===== SIMPLE LINE CHART (PLACEHOLDER) ===== */
+const canvas = document.getElementById("chart");
+const ctx = canvas.getContext("2d");
+
+function drawChart(){
+  canvas.width = canvas.offsetWidth;
+  canvas.height = 220;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  ctx.beginPath();
+  ctx.strokeStyle = "#1fd18b";
+  ctx.lineWidth = 2;
+
+  for(let i=0;i<30;i++){
+    const x = (i/29)*canvas.width;
+    const y = 200 - Math.random()*120;
+    i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>XM Mobile Replica</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system;
+      scrollbar-color: #1a2340 transparent; /* Firefox */
+      scrollbar-width: thin;
+    }
+
+    body {
+      background: #0c1324;
+      color: #fff;
+    }
+
+    /* ===== UI ===== */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      padding: 14px;
+    }
+
+    .badge {
+      background: #1fd18b;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
+    .promo {
+      margin: 20px;
+      display: flex;flex-direction: column;gap: 20px;
+    }
+
+    .offers {display: flex; gap: 16px; overflow-x: auto; overflow-y: hidden; padding: 10px 20px;
+    /* smooth scrolling */
+    scroll-behavior: smooth;
+
+    /* optional: hide scrollbar (cross-browser) */
+    scrollbar-width: none; /* Firefox */
+    }
+
+
+    .offers::-webkit-scrollbar {
+      display: none; /* Chrome, Safari */
+    }
+
+    .offer-card { min-width: 300px; width: 300px; height: 110px; background: #1e1e2f; border-radius: 14px; flex-shrink: 0; /* prevents shrinking */
+      background-size: cover;        /* fit card perfectly */
+  background-position: center;   /* center image */
+  background-repeat: no-repeat; cursor: pointer;
+    }
+
+    .offer-card:nth-child(1) {
+      background-image: url("images/global-deposit-bonus-v1.png");
+    }
+
+    .offer-card:nth-child(2) {
+      background-image: url("images/global-promo-account-ul-v1.png");
+    }
+
+    .offer-card:nth-child(3) {
+      background-image: url("images/global-promo-raf-v1.png");
+    }
+
+    .offer-card:nth-child(4) {
+      background-image: url("images/global-promo-competition-trading-v1.png");
+    }
+
+    .offer-card:nth-child(5) {
+      background-image: url("images/brand-promo-15y-cashback-v2.png");
+    }
+
+    
+    .markets {
+      padding: 12px 0px;display: flex;flex-direction: column;gap: 15px;
+    }
+    .market-header{display: flex;width: 100%;align-items: center;justify-content: space-between;padding: 0px 20px;}
+    .market-categories{display: flex;width: 100%;align-items: center;overflow-x: auto;gap: 10px;padding: 0px 20px;white-space: nowrap;}
+    .market-category-pill{text-align: center; color: #ffffffaf;border-radius: 50px;padding: 8px 16px;background-color: #1a2340;cursor: pointer;font-weight: bold;}
+    .market-categories .active {background-color: white;color: #0c1324;}
+    .market-item {display: flex;justify-content: space-between;border-bottom: 1px solid #1a2340;cursor: pointer;transition: .2s;padding: 14px 20px;}
+
+    .market-item:hover {
+      background: #121c3a;
+    }
+
+    .market-item.active {
+      background: #16224a;
+    }
+
+    .market-item .left {
+      display: flex;
+      gap: 10px;
+    }
+
+    .market-item img {
+      width: 35px;
+      height: 35px;
+    }
+
+    .symbol {
+      font-weight: 600;
+    }
+
+    .desc {
+      font-size: 16px;
+      color: #9aa4c7;
+    }
+
+    .price {
+      font-weight: 600;font-size: 18px;
+    }
+
+    .positive {
+      color: #1fd18b;
+    }
+
+    .negative {
+      color: #ff5c5c;
+    }
+
+    /* ===== OVERLAY & PANEL ===== */
+    #panelOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .45);
+      opacity: 0;
+      pointer-events: none;
+      transition: .3s;
+      z-index: 9;
+    }
+
+    #panelOverlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #tradePanel {
+      position: fixed;
+      bottom: -100%;
+      left: 0;
+      width: 100%;
+      height: 80%;
+      background: #0f1730;
+      border-radius: 16px 16px 0 0;
+      transition: .35s;
+      padding: 10px;
+      z-index: 10;
+    }
+
+    #tradePanel.active {
+      bottom: 0;
+    }
+
+    .drag-bar {
+      width: 40px;
+      height: 4px;
+      background: #444;
+      margin: 8px auto;
+      border-radius: 4px;
+    }
+
+    .trade-header {
+      padding: 10px;
+    }
+
+    canvas {
+      width: 100%;
+      height: 400px;
+      cursor: crosshair;
+      display: block;
+    }
+
+    /* ===== TOOLTIP ===== */
+    #priceTooltip {
+      position: absolute;
+      background: #000;
+      padding: 6px 8px;
+      font-size: 12px;
+      border-radius: 6px;
+      pointer-events: none;
+      display: none;
+    }
+
+    /* ===== AXES ===== */
+    .y-axis {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 46px;
+      font-size: 18px;
+      color: #9aa4c7;
+    }
+
+    .y-axis div {
+      position: absolute;
+      right: 4px;
+      transform: translateY(50%);
+    }
+
+    .x-axis {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #9aa4c7;
+      padding: 6px 8px;
+    }
+
+    /* ===== BUY / SELL ===== */
+    .trade-actions {
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+    }
+
+    .sell,
+    .buy {
+      flex: 1;
+      padding: 14px;
+      border-radius: 12px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .sell {
+      background: #ff5c5c;
+    }
+
+    .buy {
+      background: #1fd18b;
+    }
+
+    .trade-actions span {
+      display: block;
+      font-size: 12px;
+      font-weight: 400;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="top-bar">
+    <div>$0.00 <span class="badge">Real</span></div>
+  </header>
+
+  <section class="promo">
+    <h3>Finish setting up your account 🎁</h3>
+    <p>Complete all steps to unlock <strong style="color: orange;">50% deposit bonus</strong></p>
+    <p style="background-color: white;color: #0c1324;padding: 8px 12px;border-radius: 8px; width: fit-content;font-weight: 600;">Complete</p>
+  </section>
+
+  <div class="offers">
+    <div class="offer-card"></div>
+    <div class="offer-card"></div>
+    <div class="offer-card"></div>
+    <div class="offer-card"></div>
+    <div class="offer-card"></div>        
+  </div>
+
+  <section class="markets">
+    <div class="market-header">
+      <h3>Markets</h3><img src="" alt="">
+    </div>
+    <div class="market-categories">
+      <p class="market-category-pill active">Popular</p>
+      <p class="market-category-pill">Forex</p>
+      <p class="market-category-pill">Stock CFDs</p>
+      <p class="market-category-pill">Turbo Stocks</p>
+      <p class="market-category-pill">Stock 5</p>
+    </div>
+
+    <div id="marketList" class="market-list"></div>
+  </section>
+
+  <div id="panelOverlay"></div>
+
+  <div id="tradePanel">
+    <div class="drag-bar"></div>
+    <div class="trade-header">
+      <span id="tradeSymbol"></span>
+    </div>
+
+    <canvas id="chart"></canvas>
+    <div class="y-axis" id="yAxis"></div>
+    <div class="x-axis" id="xAxis"></div>
+
+    <div class="trade-actions">
+      <div class="sell">
+        SELL
+        <span id="sellPrice">--</span>
+      </div>
+      <div class="buy">
+        BUY
+        <span id="buyPrice">--</span>
+      </div>
+    </div>
+
+  </div>
+
+
+
+<script>
+  const markets = [
+    { symbol: "BTCUSD", desc: "Bitcoin vs US Dollar", type: "crypto", id: "bitcoin", img: "images/btcusd.svg"},
+    { symbol: "ETHUSD", desc: "Ethereum vs US Dollar", type: "crypto", id: "ethereum", img: "images/ethusd.svg"},
+    { symbol: "USDJPY", desc: "US Dollar vs Japanese Yen", type: "forex", base: "USD", quote: "JPY", img: "images/usdjpy.svg"}
+  ];
+
+  const list = document.getElementById("marketList");
+  const panel = document.getElementById("tradePanel");
+  const overlay = document.getElementById("panelOverlay");
+  const tradeSymbol = document.getElementById("tradeSymbol");
+
+  const canvas = document.getElementById("chart");
+  const ctx = canvas.getContext("2d");
+  const xAxis = document.getElementById("xAxis");
+  const sellPrice = document.getElementById("sellPrice");
+  const buyPrice = document.getElementById("buyPrice");
+
+  let chartData = [], chartTimes = [];
+  let crossX = null, crossY = null;
+
+  // ===== LOCAL DATA STORAGE =====
+  let storedData = [];      // current data stored
+  let updatedData = [];     // changes to apply
+
+  // ===== CHART PADDING =====
+  let padding = 40;
+  let topPadding = 20;
+  let bottomPadding = 20;
+  let leftPadding = 0;
+  let chartWidth = 0;
+  let chartHeight = 0;
+
+  // ===== INITIALIZE CANVAS =====
+  function resizeCanvas() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = 400;
+    chartWidth = canvas.width - padding * 2;
+    chartHeight = canvas.height - topPadding - bottomPadding;
+    drawChart();
+  }
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas);
+
+  // ===== BUILD MARKET LIST =====
+  markets.forEach(m => {
+    const row = document.createElement("div");
+    row.className = "market-item";
+    row.dataset.symbol = m.symbol;
+    row.innerHTML = `
+  <div class="left">
+    <img src=${m.img}>
+    <div>
+      <div class="symbol">${m.symbol}</div>
+      <div class="desc">${m.desc}</div>
+    </div>
+  </div>
+  <div class="right">
+    <div class="price">--</div>
+    <div class="change">--</div>
+  </div>`;
+    row.onclick = () => selectMarket(m, row);
+    list.appendChild(row);
+  });
+
+  // ===== LIVE PRICES =====
+  async function updatePrices() {
+    const cryptoIds = markets.filter(m => m.type === "crypto").map(m => m.id).join(",");
+    const crypto = await fetch(
+      `https://api.coingecko.com/api/v3/simple/price?ids=${cryptoIds}&vs_currencies=usd&include_24hr_change=true`
+    ).then(r => r.json());
+
+    markets.forEach(m => {
+      let price = 0, change = 0;
+      if (m.type === "crypto") {
+        price = crypto[m.id].usd;
+        change = crypto[m.id].usd_24h_change;
+      }
+
+      const row = document.querySelector(`[data-symbol="${m.symbol}"]`);
+      row.querySelector(".price").textContent = price.toLocaleString();
+      row.querySelector(".change").textContent =
+        `${change >= 0 ? "+" : ""}${change.toFixed(2)}%`;
+      row.querySelector(".change").className =
+        `change ${change >= 0 ? "positive" : "negative"}`;
+
+      // ===== STORE UPDATES =====
+      const existing = updatedData.find(u => u.symbol === m.symbol);
+      if (existing) {
+        existing.price = price;
+      } else {
+        updatedData.push({ symbol: m.symbol, price });
+      }
+    });
+  }
+  setInterval(updatePrices, 2000); // faster updates for demo
+  updatePrices();
+
+  // ===== PANEL CONTROL =====
+  overlay.onclick = () => {
+    panel.classList.remove("active");
+    overlay.classList.remove("active");
+  };
+
+  // ===== LOAD CHART =====
+  async function loadChart(m) {
+    chartData = []; chartTimes = [];
+    const res = await fetch(
+      `https://api.coingecko.com/api/v3/coins/${m.id}/market_chart?vs_currency=usd&days=1`
+    );
+    const json = await res.json();
+    json.prices.forEach(p => {
+      chartTimes.push(new Date(p[0]));
+      chartData.push(p[1]);
+    });
+
+    // Store initial data locally
+    storedData = chartData.slice();
+
+    drawChart();
+    updateTradePrices();
+  }
+
+  // ===== DRAW CHART =====
+  function drawChart() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (!chartData.length) return;
+
+    const min = Math.min(...chartData);
+    const max = Math.max(...chartData);
+    const lastPrice = chartData.at(-1);
+
+    // ===== GRID LINES =====
+    ctx.strokeStyle = "rgba(255,255,255,0.1)";
+    ctx.lineWidth = 1;
+
+    // Horizontal lines (10)
+    for (let i = 0; i <= 9; i++) {
+      const y = topPadding + i / 9 * chartHeight;
+      ctx.beginPath();
+      ctx.moveTo(padding, y);
+      ctx.lineTo(canvas.width - padding, y);
+      ctx.stroke();
+    }
+
+    // Vertical lines (3)
+    for (let i = 0; i <= 2; i++) {
+      const x = padding + i / 2 * chartWidth;
+      ctx.beginPath();
+      ctx.moveTo(x, topPadding);
+      ctx.lineTo(x, canvas.height - bottomPadding);
+      ctx.stroke();
+    }
+
+    // ===== Y AXIS LABELS =====
+    ctx.fillStyle = "#9aa4c7";
+    ctx.font = "15px system-ui";
+    ctx.textAlign = "right";
+    ctx.textBaseline = "middle";
+
+    for (let i = 0; i <= 9; i++) {
+      const y = topPadding + i / 9 * chartHeight;
+      const val = (min + (max - min) * (9 - i) / 9).toFixed(2);
+      ctx.fillText(val, canvas.width - 6, y);
+    }
+
+
+
+
+
+    
+
+    // ===== GRAPH LINE =====
+  // ===== GRAPH LINE + GRADIENT =====
+  ctx.beginPath();
+  chartData.forEach((p, i) => {
+    const x = padding + i / (chartData.length - 1) * chartWidth;
+    const y = topPadding + chartHeight - (p - min) / (max - min) * chartHeight;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+
+  // ---- CREATE GRADIENT ----
+  const gradient = ctx.createLinearGradient(0, topPadding, 0, topPadding + chartHeight);
+  gradient.addColorStop(0, "rgba(31, 209, 138, 0.16)");
+  gradient.addColorStop(0.6, "rgba(31, 209, 138, 0.04)");
+  gradient.addColorStop(1, "rgba(31, 209, 139, 0)");
+
+  // ---- FILL AREA UNDER LINE ----
+  ctx.lineTo(padding + chartWidth, topPadding + chartHeight);
+  ctx.lineTo(padding, topPadding + chartHeight);
+  ctx.closePath();
+
+  ctx.fillStyle = gradient;
+  ctx.fill();
+
+  // ---- STROKE LINE ON TOP ----
+  ctx.beginPath();
+  chartData.forEach((p, i) => {
+    const x = padding + i / (chartData.length - 1) * chartWidth;
+    const y = topPadding + chartHeight - (p - min) / (max - min) * chartHeight;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+
+  ctx.strokeStyle = "#1fd18b";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  
+    // ===== LAST PRICE LINE =====
+    const lastY = topPadding + chartHeight - (lastPrice - min) / (max - min) * chartHeight;
+    const labelWidth = 60;
+    const labelHeight = 18;
+
+    // Horizontal line
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(padding, lastY);
+    ctx.lineTo(canvas.width - padding - labelWidth, lastY);
+    ctx.stroke();
+
+    // Price label box
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(canvas.width - padding - labelWidth, lastY - labelHeight/2, labelWidth, labelHeight);
+
+    // Price text inside
+    ctx.fillStyle = "#000000";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(lastPrice.toFixed(2), canvas.width - padding - labelWidth/2, lastY);
+
+    // ===== CROSSHAIR =====
+    if (crossX !== null) {
+      ctx.strokeStyle = "rgba(255,255,255,.3)";
+      ctx.beginPath();
+      const crossYClamped = Math.min(Math.max(crossY, topPadding), canvas.height - bottomPadding);
+      ctx.moveTo(crossX, topPadding);
+      ctx.lineTo(crossX, canvas.height - bottomPadding);
+      ctx.moveTo(padding, crossYClamped);
+      ctx.lineTo(canvas.width - padding, crossYClamped);
+      ctx.stroke();
+    }
+
+    // ===== X AXIS LABELS =====
+    xAxis.innerHTML = `
+      <span>${chartTimes[0]?.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
+      <span>${chartTimes.at(-1)?.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
+    `;
+  }
+
+  // ===== CROSSHAIR EVENTS =====
+  canvas.onmousemove = e => {
+    const r = canvas.getBoundingClientRect();
+    crossX = e.clientX - r.left;
+    crossY = e.clientY - r.top;
+    drawChart();
+  };
+  canvas.onmouseleave = () => {
+    crossX = null; crossY = null;
+    drawChart();
+  };
+
+  // ===== BUY / SELL =====
+  function updateTradePrices() {
+    const last = chartData.at(-1);
+    sellPrice.textContent = last.toFixed(2);
+    buyPrice.textContent = (last + 20).toFixed(2);
+  }
+
+  // ===== SELECT MARKET =====
+  async function selectMarket(m, row) {
+    document.querySelectorAll(".market-item").forEach(r => r.classList.remove("active"));
+    row.classList.add("active");
+    tradeSymbol.textContent = m.symbol;
+    panel.classList.add("active");
+    overlay.classList.add("active");
+    await loadChart(m);
+  }
+</script>
+
+
+
+
+
+</body>
+
+</html>
