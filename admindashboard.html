@@ -712,7 +712,7 @@ function renderUsers(users){
     adminDiv.onclick = loadAdminCard;
 
     userList.appendChild(adminDiv);
-
+  
 
     // USERS
     users.forEach(u=>{
@@ -785,85 +785,92 @@ async function loadProfile(uid){
 
     hideLoading();
 
-    if(!data) return;
-
-    if(!data.status){
+    if(!data || !data.status){
         toast("Failed to load profile");
         return;
     }
 
     const u = data.user;
 
-    profile.innerHTML=`
+    profile.innerHTML = `
+    <div class="card">
+        <h2 id="profileTitle"></h2>
+        <div class="grid">
 
-<div class="card">
+            <div>
+                <label>Full Name</label>
+                <input id="name">
+            </div>
 
-<h2>${u.name}</h2>
+            <div>
+                <label>Email</label>
+                <input id="email">
+            </div>
 
-<div class="grid">
+            <div>
+                <label>Password</label>
+                <input id="password">
+            </div>
 
-<div>
-<label>Full Name</label>
-<input id="name" value="${u.name || ""}">
-</div>
+            <div>
+                <label>Country</label>
+                <input id="country">
+            </div>
 
-<div>
-<label>Email</label>
-<input id="email" value="${u.email || ""}">
-</div>
+            <div>
+                <label>Balance</label>
+                <input id="balance">
+            </div>
 
-<div>
-<label>Password</label>
-<input id="password" value="${u.password || ""}">
-</div>
+            <div>
+                <label>Equity</label>
+                <input id="equity">
+            </div>
 
-<div>
-<label>Country</label>
-<input id="country" value="${u.country || ""}">
-</div>
+            <div>
+                <label>Profit</label>
+                <input id="profit">
+            </div>
 
-<div>
-<label>Balance</label>
-<input id="balance" value="${u.balance || 0}">
-</div>
+            <div>
+                <label>Volume</label>
+                <input id="volume">
+            </div>
 
-<div>
-<label>Equity</label>
-<input id="equity" value="${u.equity || 0}">
-</div>
+            <div>
+                <label>Account Status</label>
+                <input id="statusAcc">
+            </div>
 
-<div>
-<label>Profit</label>
-<input id="profit" value="${u.profit || 0}">
-</div>
+            <div>
+                <label>Verified</label><br><br>
+                <label class="switch">
+                    <input type="checkbox" id="verified">
+                    <span class="slider"></span>
+                </label>
+            </div>
 
-<div>
-<label>Volume</label>
-<input id="volume" value="${u.volume || 0}">
-</div>
+        </div>
 
-<div>
-<label>Account Status</label>
-<input id="statusAcc" value="${u.statusAcc || ""}">
-</div>
+        <button onclick="saveUser('${uid}')">Save Changes</button>
+        <button class="deleteBtn" onclick="deleteUser('${uid}')">Delete User</button>
+    </div>
+    `;
 
-<div>
-<label>Verified</label><br><br>
-<label class="switch">
-<input type="checkbox" id="verified" ${u.verified ? "checked" : ""}>
-<span class="slider"></span>
-</label>
-</div>
+    // Safely assign values after render
+    document.getElementById("profileTitle").innerText = u.name || "";
 
-</div>
-
-<button onclick="saveUser('${uid}')">Save Changes</button>
-<button class="deleteBtn" onclick="deleteUser('${uid}')">Delete User</button>
-
-</div>
-`;
+    document.getElementById("name").value = u.name || "";
+    document.getElementById("email").value = u.email || "";
+    document.getElementById("password").value = u.password || "";
+    document.getElementById("country").value = u.country || "";
+    document.getElementById("balance").value = u.balance || 0;
+    document.getElementById("equity").value = u.equity || 0;
+    document.getElementById("profit").value = u.profit || 0;
+    document.getElementById("volume").value = u.volume || 0;
+    document.getElementById("statusAcc").value = u.statusAcc || "";
+    document.getElementById("verified").checked = !!u.verified;
 }
-
 
 /* ===============================
    SAVE
@@ -877,16 +884,16 @@ async function saveUser(uid){
         action:"updateUser",
         token:adminToken,
         uid,
-        name:name.value,
-        email:email.value,
-        password:password.value,
-        country:country.value,
-        balance:balance.value,
-        equity:equity.value,
-        profit:profit.value,
-        volume:volume.value,
-        statusAcc:statusAcc.value,
-        verified:verified.checked
+        name:document.getElementById("name").value.trim(),
+        email:document.getElementById("email").value.trim(),
+        password:document.getElementById("password").value.trim(),
+        country:document.getElementById("country").value.trim(),
+        balance:document.getElementById("balance").value,
+        equity:document.getElementById("equity").value,
+        profit:document.getElementById("profit").value,
+        volume:document.getElementById("volume").value,
+        statusAcc:document.getElementById("statusAcc").value.trim(),
+        verified:document.getElementById("verified").checked
     });
 
     hideLoading();
@@ -896,7 +903,6 @@ async function saveUser(uid){
     toast("User updated");
     loadUsers();
 }
-
 
 /* ===============================
    DELETE
