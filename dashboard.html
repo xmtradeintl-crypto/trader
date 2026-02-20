@@ -24,12 +24,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom:1px solid #ffffff1a;
     }
 
-    .balance-box {
+    .profile-box {
     display: flex;
     align-items: center;
     gap: 8px;
+    cursor: pointer;
     }
 
     .balance {
@@ -51,7 +53,7 @@
     }
 
 
-    .top-actions img {
+    .top-actions-img {
     width: 35px;
     height: 35px;
     padding: 8px;
@@ -487,7 +489,7 @@
     .user-portfolio-small{ font-size:13px; color:#8a8f98; }
 
     .user-portfolio-dropdown{
-      background:#262a33;
+      background:#ffffff1a;
       padding:6px 12px;
       border-radius:12px;
       font-size:13px;
@@ -498,6 +500,7 @@
       font-size:36px;
       font-weight:700;
       margin:10px 0 10px;
+      margin-bottom: 5px;
     }
 
     .user-porfolio-badge{
@@ -516,8 +519,8 @@
       display:flex;
       justify-content:space-between;
       align-items:center;
-      padding:14px 0;
-      border-top:1px solid #22252c;
+      padding:6px 0;
+      border-top:1px solid #ffffff1a;
       font-size:14px;
     }
 
@@ -530,7 +533,7 @@
 
     .user-portfolio-info{
       width:14px;height:14px;border-radius:50%;
-      background:#2b303a;font-size:10px;
+      background:#ffffff18;font-size:10px;
       display:flex;align-items:center;justify-content:center;
       color:#9aa0a6;
     }
@@ -615,15 +618,17 @@
 <div class="app">
 
   <!-- ================= FLOATING TOP BAR ================= -->
-  <header class="top-bar">
-    <div class="balance-box"><span>Hello, </span>
+  <header class="top-bar">      
+
+    <div class="profile-box" id="profileButton">
+      <img src="images/profile-icon.png" alt="Profile" class="top-actions-img">      
+      <span>Hello, </span>
       <span class="balance" id="fontPageProfileName"></span>
     </div>
 
     <div class="top-actions">
-      <img src="images/notification-icon.png" alt="Notifications" id="notificationButton">
-      <img src="images/wallet-icon.png" alt="History" id="walletButton">
-      <img src="images/profile-icon.png" alt="Profile" id="profileButton">
+      <img src="images/notification-icon.png" alt="Notifications" id="notificationButton" class="top-actions-img">
+      <img src="images/wallet-icon.png" alt="History" id="walletButton" class="top-actions-img">
     </div>
   </header>
 
@@ -643,7 +648,7 @@
 
           <div class="user-portfolio-balance" id="userBalance">$------</div>
 
-          <div>
+          <div style="margin-bottom: 10px;">
             <span class="user-porfolio-badge" id="profitPercentage">---%</span>
             <span class="user-portfolio-green" id="totalInvested1">$------</span>
           </div>
@@ -676,7 +681,7 @@
 
           <div class="portfolioChart-title-row">
             <div style="font-size:18px;font-weight:600;">Portfolio Chart</div>
-            <div style="background:#262a33;width:34px;height:34px;border-radius:12px;display:flex;align-items:center;justify-content:center;">⚙</div>
+            <div style="background:#ffffff1a;width:34px;height:34px;border-radius:12px;display:flex;align-items:center;justify-content:center;">⚙</div>
           </div>
 
           <div class="portfolioChart-box">
@@ -5633,7 +5638,7 @@ function copyWallet(){
       line.setAttribute("x2",width);
       line.setAttribute("y1",y);
       line.setAttribute("y2",y);
-      line.setAttribute("stroke","#22252c");
+      line.setAttribute("stroke","#ffffff1a");
       line.setAttribute("stroke-width","1");
       userPortfolioSVG.appendChild(line);
     });
