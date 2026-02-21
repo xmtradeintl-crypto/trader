@@ -563,8 +563,8 @@
     .user-porfolio-axis{
       position:absolute;
       right:0;
-      top:0;
-      height:100%;
+      top:20px;
+      height:230px;
       width:65px;
       display:flex;
       flex-direction:column;
@@ -579,7 +579,7 @@
     .high-line{
       position:absolute;
       left:0;
-      width:calc(100% - 65px);
+      width: 100%;
       border-top:1px dashed #3b82f6;
       opacity:.5;
       z-index:1;
@@ -6054,12 +6054,13 @@ function renderPortfolioChart(currentProfit){
     maximumFractionDigits:2
   });
 
-  highLine.style.top = "0px";
+  highLine.style.top = "20px";
   highLabel.style.top = "-14px";
   highLabel.style.left = width * 0.55 + "px";
   highLabel.textContent = "High: $" + formattedProfit;
 
-  highBadge.style.top = "-10px";
+  highBadge.style.top = "9.1px";
+  highBadge.style.right = "-10px";  
   highBadge.textContent = formattedProfit;
 }
 
