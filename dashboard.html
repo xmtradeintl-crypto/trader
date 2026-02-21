@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -563,7 +563,7 @@
     .user-porfolio-axis{
       position:absolute;
       right:0;
-      top:20px;
+      top:0;
       height:90%;
       width:65px;
       display:flex;
@@ -5950,7 +5950,7 @@ function renderPortfolioChart(currentProfit){
   const totalWidth = 390;
   const axisWidth = 65;
   const width = totalWidth - axisWidth;
-  const height = 260;
+  const height = 350;
 
   userPortfolioSVG.setAttribute("viewBox", `0 0 ${totalWidth} ${height}`);
 
@@ -5974,7 +5974,7 @@ function renderPortfolioChart(currentProfit){
 
   /* GRID */
   scaleValues.forEach((v,i)=>{
-    const y = (i/(intervals-1))*height;
+    const y = (i/(intervals-0.5))*height;
     const line = document.createElementNS("http://www.w3.org/2000/svg","line");
     line.setAttribute("x1",0);
     line.setAttribute("x2",width);
