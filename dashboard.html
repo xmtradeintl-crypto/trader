@@ -490,10 +490,16 @@
 
     .user-portfolio-dropdown{
       background:#ffffff1a;
-      padding:6px 12px;
+      padding: 11px;
+      height: 35px;
+      width: 35px;
       border-radius:12px;
       font-size:11px;
-      color:#d1d5db;
+      color:#ffffff15;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
     }
 
     .user-portfolio-balance{
@@ -628,7 +634,6 @@
 
     <div class="top-actions">
       <img src="images/notification-icon.png" alt="Notifications" id="notificationButton" class="top-actions-img">
-      <img src="images/wallet-icon.png" alt="History" id="walletButton" class="top-actions-img">
     </div>
   </header>
 
@@ -643,7 +648,7 @@
         <div class="user-portfolio-card">
           <div class="user-portfolio-header">
             <div class="status"  id="accountStatus">Wallet Loading...</div>
-            <div class="user-portfolio-dropdown">Ytd ▾</div>
+            <div class="user-portfolio-dropdown" id="walletButton"><img src="images/wallet-icon.png" alt="History" style="height: 100%;"></div>
           </div>
 
           <div class="user-portfolio-balance" id="userBalance">$------</div>
@@ -1140,21 +1145,19 @@
           </div>
 
           <!--WALLET CANVAS-->
-          <div id="walletView" style="padding: 0px 15px;" class="slide-canvas canvas-disabled">
+          <div id="walletView"class="slide-canvas canvas-disabled">
             <div class="slide-panel-topbar">
-              <div><h3>Funding</h3></div>
+              <div><h3>Funding and Transactions</h3></div>
               <img src="images/cancle-icon.png" alt="" class="cancel-btn slide-panel-topbar-img">
             </div>     
-            <div class="wallet-wrap"s>
+            <div class="wallet-wrap">
               
 
-              <div class="available-balance-card">
+              <div class="available-balance-card" style="display: none;">
                 <h4>Standard <span class="status">Real</span></h4>
                 <p style="font-size: 20px; font-weight: 600;" id="balance2" >0.00 USD </p>
                 <P style="color: #ffffff4b; font-weight: 600;">#36630840</P>
               </div>
-              
-              <h3>Funding Options</h3>
 
               <div class="funding-options-wrap">
                 <div class="funding-option-btn" onclick="document.getElementById('depositButton').click()" >
@@ -1180,7 +1183,7 @@
           </div>
 
           <!--PROFILE CANVAS-->
-          <div id="profileView" style="padding: 0px 15px;"  class="slide-canvas canvas-disabled">
+          <div id="profileView" class="slide-canvas canvas-disabled">
             <div class="slide-panel-topbar">
               <h3>My Profile</h3>
               <div style="display: flex;align-items: center;gap: 20px;">
@@ -3372,7 +3375,7 @@ function renderWalletQR(){
 .deposit-method-card p{font-size: 16px; color: #ffffff6c;}
 .wallet-wrap{display: flex;flex-direction: column;gap: 20px; }
 .available-balance-card{display: flex; flex-direction: column; width: 100%; border-radius: 12px; min-height: 100px;   background:var(--card); border:1px solid var(--border); padding: 20px;}
-.funding-options-wrap{display: flex; flex-direction: column; width: 100%; gap: 10px;}
+.funding-options-wrap{display: flex; flex-direction: column; width: 100%; gap: 10px;padding: 20px;}
 .funding-option-btn{display: flex; width: 100%; border-radius:12px; padding: 15px 20px; border: #ffffff46 solid 1px; cursor: pointer;align-items: center; gap: 15px;}
 .funding-button-icon{height: 18px;width: 18px;}
 .slider-content-wrap{display: flex;flex-direction: column; height: 100%;gap: 20px;}
@@ -4606,7 +4609,10 @@ function num(val){
 }
 
 function money(val){
- return "$" + num(val).toLocaleString(); 
+ return "$" + num(val).toLocaleString(undefined,{
+      minimumFractionDigits:2,
+      maximumFractionDigits:2
+    }); 
 }
 
 function setText(id,val){
