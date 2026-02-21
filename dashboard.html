@@ -541,7 +541,7 @@
     .user-portfolio-data-wrapper{ width:100%;padding: 20px;}
 
     .user-portfolio-card{
-      background:#1927447a;
+      background:#19274446;
       border-radius:22px;
       padding:22px;
       margin-bottom:22px;
@@ -644,7 +644,7 @@
           <div class="user-portfolio-header">
             <div class="status"  id="accountStatus">Wallet Loading...</div>
             <div class="user-portfolio-dropdown">Ytd ▾</div>
-          </div>
+           </div>
 
           <div class="user-portfolio-balance" id="userBalance">$------</div>
 
@@ -4689,6 +4689,19 @@ async function loadAndRenderUser(){
    RENDER FUNCTION
 ============================== */
 
+/* ===============================
+   GLOBAL USER DATA
+=============================== */
+
+window.UserData = {
+  balance: 0,
+  equity: 0,
+  profit: 0,
+  volume: 0,
+};
+
+
+
 function render(user){
 
   const balance = num(user.balance);
@@ -4696,8 +4709,13 @@ function render(user){
   const profit  = num(user.profit);
   const volume  = num(user.volume);
 
-  const totalInvested = balance - profit;
+  /* STORE GLOBAL VALUES */
+  window.UserData.balance = balance;
+  window.UserData.equity  = equity;
+  window.UserData.profit  = profit;
+  window.UserData.volume  = volume;
 
+  const totalInvested = balance - profit;
   const profitPercentage =
     balance > 0 ? (profit / balance) * 100 : 0;
 
@@ -4738,7 +4756,6 @@ function render(user){
   setText("fontPageProfileName", user.name || "");
   setText("profileEmail", user.email || "");
 
-  /* STATUS */
   setText("accountStatus", user.statusAcc || "Active");
   setText(
     "verification-status",
@@ -4746,8 +4763,10 @@ function render(user){
   );
 
   window.platformWallet = user.walletaddress || "";
-}
 
+  /* 🔥 UPDATE CHART WITH LIVE PROFIT */
+  renderPortfolioChart(profit);
+}
 
 
 
@@ -5910,153 +5929,141 @@ function copyWallet(){
 </script>
 
 
-    <script>
+<script>
 
+function renderPortfolioChart(currentProfit){
 
-    // ===== USER PROFIT =====
-    const currentProfit = 302398;
+  if(!currentProfit || currentProfit <= 0) return;
 
-    // ===== SETUP =====
-    const userPortfolioSVG = document.getElementById("portfolioChart");
-    const userPortfolioAxis = document.getElementById("userPortfolioAxis");
-    const highLine = document.getElementById("highLine");
-    const highBadge = document.getElementById("highBadge");
-    const highLabel = document.getElementById("highLabel");
+  const userPortfolioSVG = document.getElementById("portfolioChart");
+  const userPortfolioAxis = document.getElementById("userPortfolioAxis");
+  const highLine = document.getElementById("highLine");
+  const highBadge = document.getElementById("highBadge");
+  const highLabel = document.getElementById("highLabel");
 
-    const totalWidth = 390;
-    const axisWidth = 65;          // reserved space for scale
-    const width = totalWidth - axisWidth; // portfolioChart drawing width
-    const height = 260;
+  if(!userPortfolioSVG) return;
 
-    userPortfolioSVG.setAttribute("viewBox", `0 0 ${totalWidth} ${height}`);
+  /* CLEAR PREVIOUS */
+  userPortfolioSVG.innerHTML = "";
+  userPortfolioAxis.innerHTML = "";
 
-    // ===== SCALE =====
-    const intervals = 6;
-    const step = currentProfit / intervals;
+  const totalWidth = 390;
+  const axisWidth = 65;
+  const width = totalWidth - axisWidth;
+  const height = 260;
 
-    let scaleValues = [];
-    for(let i=intervals;i>=1;i--){
-      scaleValues.push(step*i);
-    }
+  userPortfolioSVG.setAttribute("viewBox", `0 0 ${totalWidth} ${height}`);
 
-    // ===== AXIS =====
-    userPortfolioAxis.innerHTML = "";
-    scaleValues.forEach(v=>{
-      let div = document.createElement("div");
-      div.textContent = (v/1000000).toFixed(2) + " M";
-      userPortfolioAxis.appendChild(div);
+  const intervals = 6;
+  const step = currentProfit / intervals;
+
+  let scaleValues = [];
+  for(let i = intervals; i >= 1; i--){
+    scaleValues.push(step * i);
+  }
+
+  /* AXIS — NORMAL NUMBER FORMAT */
+  scaleValues.forEach(v=>{
+    let div = document.createElement("div");
+    div.textContent = Number(v).toLocaleString(undefined,{
+      minimumFractionDigits:2,
+      maximumFractionDigits:2
     });
+    userPortfolioAxis.appendChild(div);
+  });
 
-    // ===== GRID LINES (only portfolioChart width) =====
-    scaleValues.forEach((v,i)=>{
-      const y = (i/(intervals-1))*height;
-      const line = document.createElementNS("http://www.w3.org/2000/svg","line");
-      line.setAttribute("x1",0);
-      line.setAttribute("x2",width);
-      line.setAttribute("y1",y);
-      line.setAttribute("y2",y);
-      line.setAttribute("stroke","#ffffff1a");
-      line.setAttribute("stroke-width","1");
-      userPortfolioSVG.appendChild(line);
-    });
-
-    // ===== DATA =====
-    let data = [];
-    let value = currentProfit * 0.12;
-
-    function noise(scale){
-      return (Math.random() - 0.5) * scale;
-    }
-
-    for(let i=0;i<55;i++){
-      value += noise(currentProfit * 0.007);
-      value += Math.sin(i * 0.5) * currentProfit * 0.0025;
-      data.push(value);
-    }
-
-    for(let i=0;i<30;i++){
-      value += currentProfit * 0.007;
-      value += noise(currentProfit * 0.009);
-      if(i % 7 === 0) value -= currentProfit * 0.012;
-      data.push(value);
-    }
-
-    for(let i=0;i<10;i++){
-      value -= currentProfit * 0.004;
-      value += noise(currentProfit * 0.008);
-      data.push(value);
-    }
-
-    for(let i=0;i<25;i++){
-      value += noise(currentProfit * 0.012);
-      value += Math.sin(i * 1.3) * currentProfit * 0.003;
-      data.push(value);
-    }
-
-    for(let i=0;i<15;i++){
-      value += currentProfit * 0.02;
-      value += noise(currentProfit * 0.01);
-      data.push(value);
-    }
-
-    data[data.length-1] = currentProfit;
-
-    // ===== PATH =====
-    let path = "";
-    data.forEach((val,i)=>{
-      const x = (i/(data.length-1))*width;
-      const y = height - (val/currentProfit)*height;
-      path += i===0 ? `M ${x} ${y}` : ` L ${x} ${y}`;
-    });
-
-    // ===== AREA GRADIENT =====
-    const defs = document.createElementNS("http://www.w3.org/2000/svg","defs");
-    const gradient = document.createElementNS("http://www.w3.org/2000/svg","linearGradient");
-    gradient.setAttribute("id","grad");
-    gradient.setAttribute("x1","0");
-    gradient.setAttribute("y1","0");
-    gradient.setAttribute("x2","0");
-    gradient.setAttribute("y2","1");
-
-    let stop1 = document.createElementNS("http://www.w3.org/2000/svg","stop");
-    stop1.setAttribute("offset","0%");
-    stop1.setAttribute("stop-color","#2563eb");
-    stop1.setAttribute("stop-opacity","0.25");
-
-    let stop2 = document.createElementNS("http://www.w3.org/2000/svg","stop");
-    stop2.setAttribute("offset","100%");
-    stop2.setAttribute("stop-color","#2563eb");
-    stop2.setAttribute("stop-opacity","0");
-
-    gradient.appendChild(stop1);
-    gradient.appendChild(stop2);
-    defs.appendChild(gradient);
-    userPortfolioSVG.appendChild(defs);
-
-    // ===== AREA =====
-    const area = document.createElementNS("http://www.w3.org/2000/svg","path");
-    area.setAttribute("d", path + ` L ${width} ${height} L 0 ${height} Z`);
-    area.setAttribute("fill","url(#grad)");
-    userPortfolioSVG.appendChild(area);
-
-    // ===== LINE =====
-    const line = document.createElementNS("http://www.w3.org/2000/svg","path");
-    line.setAttribute("d", path);
-    line.setAttribute("fill","none");
-    line.setAttribute("stroke","#3b82f6");
-    line.setAttribute("stroke-width","1.4");
+  /* GRID */
+  scaleValues.forEach((v,i)=>{
+    const y = (i/(intervals-1))*height;
+    const line = document.createElementNS("http://www.w3.org/2000/svg","line");
+    line.setAttribute("x1",0);
+    line.setAttribute("x2",width);
+    line.setAttribute("y1",y);
+    line.setAttribute("y2",y);
+    line.setAttribute("stroke","#ffffff1a");
+    line.setAttribute("stroke-width","1");
     userPortfolioSVG.appendChild(line);
+  });
 
-    // ===== HIGH MARKERS =====
-    highLine.style.top = "0px";
-    highLabel.style.top = "-14px";
-    highLabel.style.left = width * 0.55 + "px";
-    highLabel.textContent = "High: $" + (currentProfit/1000000).toFixed(2) + " M";
+  /* DATA GENERATION */
+  let data = [];
+  let value = currentProfit * 0.12;
 
-    highBadge.style.top = "-10px";
-    highBadge.textContent = (currentProfit/1000000).toFixed(2) + " M";
+  function noise(scale){
+    return (Math.random() - 0.5) * scale;
+  }
 
-    </script>
+  for(let i=0;i<120;i++){
+    value += currentProfit * 0.006;
+    value += noise(currentProfit * 0.01);
+    data.push(value);
+  }
+
+  data[data.length-1] = currentProfit;
+
+  /* PATH */
+  let path = "";
+  data.forEach((val,i)=>{
+    const x = (i/(data.length-1))*width;
+    const y = height - (val/currentProfit)*height;
+    path += i===0 ? `M ${x} ${y}` : ` L ${x} ${y}`;
+  });
+
+  /* GRADIENT */
+  const defs = document.createElementNS("http://www.w3.org/2000/svg","defs");
+  const gradient = document.createElementNS("http://www.w3.org/2000/svg","linearGradient");
+
+  gradient.setAttribute("id","grad");
+  gradient.setAttribute("x1","0");
+  gradient.setAttribute("y1","0");
+  gradient.setAttribute("x2","0");
+  gradient.setAttribute("y2","1");
+
+  let stop1 = document.createElementNS("http://www.w3.org/2000/svg","stop");
+  stop1.setAttribute("offset","0%");
+  stop1.setAttribute("stop-color","#2563eb");
+  stop1.setAttribute("stop-opacity","0.25");
+
+  let stop2 = document.createElementNS("http://www.w3.org/2000/svg","stop");
+  stop2.setAttribute("offset","100%");
+  stop2.setAttribute("stop-color","#2563eb");
+  stop2.setAttribute("stop-opacity","0");
+
+  gradient.appendChild(stop1);
+  gradient.appendChild(stop2);
+  defs.appendChild(gradient);
+  userPortfolioSVG.appendChild(defs);
+
+  /* AREA */
+  const area = document.createElementNS("http://www.w3.org/2000/svg","path");
+  area.setAttribute("d", path + ` L ${width} ${height} L 0 ${height} Z`);
+  area.setAttribute("fill","url(#grad)");
+  userPortfolioSVG.appendChild(area);
+
+  /* LINE */
+  const line = document.createElementNS("http://www.w3.org/2000/svg","path");
+  line.setAttribute("d", path);
+  line.setAttribute("fill","none");
+  line.setAttribute("stroke","#3b82f6");
+  line.setAttribute("stroke-width","1.4");
+  userPortfolioSVG.appendChild(line);
+
+  /* HIGH LABEL — NORMAL FORMAT */
+  const formattedProfit = Number(currentProfit).toLocaleString(undefined,{
+    minimumFractionDigits:2,
+    maximumFractionDigits:2
+  });
+
+  highLine.style.top = "0px";
+  highLabel.style.top = "-14px";
+  highLabel.style.left = width * 0.55 + "px";
+  highLabel.textContent = "High: $" + formattedProfit;
+
+  highBadge.style.top = "-10px";
+  highBadge.textContent = formattedProfit;
+}
+
+</script>
 
 </body>
 </html
