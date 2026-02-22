@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -637,7 +637,15 @@
     </div>
 
     <div class="top-actions">
-      <img src="images/notification-icon.png" alt="Notifications" id="notificationButton" class="top-actions-img">
+      <div style="display:flex; width:40px; position:relative;">
+
+        <img src="images/notification-icon.png" alt="Notifications" id="notificationButton" class="top-actions-img">
+
+        <!-- Blue Notification Dot -->
+        <div style=" position:absolute; top:4px; right:6px; height:8px; width:8px; background-color:#2563eb; border-radius:50%;"></div>
+
+      </div>
+
       <img src="images/profile-icon.png" alt="Profile" class="top-actions-img" id="profileButton">       
     </div>
 
@@ -6108,4 +6116,3 @@ function renderPortfolioChart(currentProfit){
 
 </body>
 </html
-
