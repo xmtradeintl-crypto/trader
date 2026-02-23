@@ -216,13 +216,13 @@
         .categories-scrollbar{display: flex;width: 100%;align-items: center;overflow-x: auto;gap: 5px;padding: 0px 10px;white-space: nowrap;height: 70px;position: sticky;top: 0;}
         .market-category-pill{text-align: center; color: #ffffffaf;border-radius: 50px;padding: 5px 16px;background-color: #ffffff0c;cursor: pointer; font-weight: bold;font-size: 14px;}
         .market-category-pill:hover{background-color: #ffffff36;}
-        .notification-category-pill{text-align: center; color: #ffffffaf;border-radius: 50px;padding: 5px 16px;background-color: #ffffff0c;cursor: pointer;font-weight: bold;font-size: 12px;}
+        .notification-category-pill{text-align: center; color: #ffffffaf;border-radius: 50px;padding: 5px 16px;background-color: #ffffff0c;cursor: pointer;font-weight: bold;font-size: 14px;}
         .notification-category-pill:hover{background-color: #ffffff36;}    
-        .trades-category-pill{text-align: center; color: #ffffffaf;border-radius: 50px;padding: 5px 16px;background-color: #ffffff0c;cursor: pointer;font-weight: bold;font-size: 12px;}
+        .trades-category-pill{text-align: center; color: #ffffffaf;border-radius: 50px;padding: 5px 16px;background-color: #ffffff0c;cursor: pointer;font-weight: bold;font-size: 14px;}
         .trades-category-pill:hover{background-color: #ffffff36;} 
-        .more-category-pill{text-align: center; color: #ffffffaf;border-radius: 50px;padding: 5px 16px;background-color: #ffffff0c;cursor: pointer;font-weight: bold;font-size: 12px;}
+        .more-category-pill{text-align: center; color: #ffffffaf;border-radius: 50px;padding: 5px 16px;background-color: #ffffff0c;cursor: pointer;font-weight: bold;font-size: 14px;}
         .more-category-pill:hover{background-color: #ffffff36;} 
-        .search-category-pill{text-align: center; color: #ffffffaf;border-radius: 50px;padding: 5px 16px;background-color: #ffffff0c;cursor: pointer;font-weight: bold;font-size: 12px;}
+        .search-category-pill{text-align: center; color: #ffffffaf;border-radius: 50px;padding: 5px 16px;background-color: #ffffff0c;cursor: pointer;font-weight: bold;font-size: 14px;}
         .search-category-pill:hover{background-color: #ffffff36;}                               
         .categories-scrollbar .active {background-color: white;color: #0c1324;}
         .market-item {display: flex;justify-content: space-between;border-bottom: 1px solid #1a2340;cursor: pointer;transition: .2s;padding: 14px 20px;}
@@ -541,15 +541,22 @@
       color:#9aa0a6;
     }
 
-    .user-portfolio-data-wrapper{ width:100%;padding: 20px;}
+    .user-portfolio-data-wrapper{ width:100%;}
+
+
+
+    .user-portfolio-card-1{
+      border-radius:22px;
+      padding:22px;
+      margin:0px 0px 22px 0px;      
+    }
 
     .user-portfolio-card{
       background:#1927442c;
       border-radius:22px;
       padding:22px;
-      margin-bottom:22px;
+      margin:20px;
     }
-
     .portfolioChart-title-row{
       display:flex;
       justify-content:space-between;
@@ -657,9 +664,9 @@
     <!-- PAGE 1 -->
     <section class="page active" id="page-markets">
 
-        <div class="user-portfolio-data-wrapper">
+      <div class="user-portfolio-data-wrapper">
 
-        <div class="user-portfolio-card" style="border: #3b82f6 solid 1px; background-color: #3b83f613;">
+        <div class="user-portfolio-card-1">
 
           <div class="user-portfolio-header">
             <div class="status" id="balanceTag">Wallet Loading...</div>
@@ -697,22 +704,22 @@
           </div>
 
 
-          <div class="user-portfolio-card-buttons-wrapper" style="margin-top: 10px; display: flex; width: 100%;justify-content: space-between; align-items: center;">
-             
-            <div class="user-portfolio-card-button-wrapper" style="display: flex; padding: 8px 10px; border-radius: 10px; background-color: #2563eb;cursor: pointer;justify-content: space-between;gap: 5px; align-items: center;" onclick="document.getElementById('depositButton').click()" >
-              <img src="images/withdraw-icon.png" alt="" style="height: 15px">
-              <p style="font-size: 10px;">Deposit</p>
+          <div style="width: 100%; margin-top: 10px; display:flex;gap: 10px;justify-content: space-between;">
+
+            <div  style="display: flex; flex-direction: column;gap: 10px;padding: 10px;align-items: center;width: 100%;" onclick="document.getElementById('depositButton').click()">
+              <img src="images/withdraw-icon.png" alt="" style="width: 50px;height: 50px;border-radius: 60px;background-color: #2563eb;padding: 12px;">
+              <p style="font-size: 14px;text-align: center;">Deposit</p>
             </div>
 
-            <div class="user-portfolio-card-button-wrapper" style="display: flex; padding: 8px 10px; border-radius: 10px; background-color: #2563eb;cursor: pointer;justify-content: space-between;gap: 5px; align-items: center;" onclick="document.getElementById('withdrawButton').click()">
-              <img src="images/deposit-icon.png" alt="" style="height: 15px">
-              <p style="font-size: 10px;">Withdraw</p>
+            <div  style="display: flex; flex-direction: column;gap: 10px;padding: 10px;align-items: center;width: 100%;" onclick="document.getElementById('withdrawButton').click()">
+              <img src="images/deposit-icon.png" alt="" style="width: 50px;height: 50px;border-radius: 60px;background-color: #2563eb;padding: 12px;">
+              <p style="font-size: 14px;text-align: center;">Withdraw</p>
             </div>
-
-            <div class="user-portfolio-card-button-wrapper" style="display: flex; padding: 8px 10px; border-radius: 10px; background-color: #2563eb;cursor: pointer;justify-content: space-between;gap: 5px; align-items: center;" onclick="document.getElementById('transactionsButton').click()">
-              <img src="images/transaction-history-icon.png" alt="" style="height: 15px">
-              <p style="font-size: 10px;">History</p>
-            </div>
+            
+            <div  style="display: flex; flex-direction: column;gap: 10px;padding: 10px;align-items: center;width: 100%;" onclick="document.getElementById('transactionsButton').click()">
+              <img src="images/transaction-history-icon.png" alt="" style="width: 50px;height: 50px;border-radius: 60px;background-color: #2563eb;padding: 12px;">
+              <p style="font-size: 14px;text-align: center;">Transaction History</p>
+            </div>            
 
           </div>
 
@@ -1314,7 +1321,7 @@
                 <input id="marketSearch" class="field" type="text" placeholder="Symbol, E.g. AAPL ">
               </div>
 
-              <p class="cancel-btn" style="font-size: 17px; font-weight: 600;margin-right: 20px;">Cancel</p>
+              <p class="cancel-btn" style="font-size: 15px; font-weight: 600;margin-right: 5px;">Cancel</p>
 
             </div>
             <div class="slider-content-wrap">
@@ -3483,7 +3490,7 @@ function renderWalletQR(){
 <style>
 /* INPUTS */
 
-.field{border: none;width: 100%;  background: none;color: white;  font-size:16px;}
+.field{border: none;width: 100%;  background: none;color: white;  font-size:14px;}
 .field::placeholder{color:#9aa3b2}
 .field:focus{outline: none;border: none;}
 
@@ -3513,7 +3520,7 @@ function renderWalletQR(){
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  height: 100%;
+  height: 80%;
 }
 
 .page-wrap{width: 100%;height: 100%;display: flex;flex-direction: column;}
@@ -6106,7 +6113,7 @@ function renderPortfolioChart(currentProfit){
 </script>
 
     <style>
-      .user-portfolio-card-buttons-wrapper{display: flex; width: 100%;justify-content: space-between; align-items: center};
+      .user-portfolio-card-buttons-wrapper{display: flex; width: 100%;justify-content: space-between;};
       .user-portfolio-card-button-wrapper{display: flex; padding: 8px 15px; border-radius: 10px; background-color: #2563eb;cursor: pointer};
       .user-portfolio-card-button-wrapper img{height: 100%};
       .user-portfolio-card-button-wrapper p{font-size: 10px;};
