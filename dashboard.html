@@ -670,10 +670,15 @@
 
           <div class="user-portfolio-header">
             <div class="status" id="balanceTag">Wallet Loading...</div>
-            <div class="user-portfolio-dropdown" id="walletButton"><img src="images/wallet-icon.png" alt="History" style="height: 100%;"></div>
+              <div style="font-size: 12px;display: flex;align-items: center; gap: 10px;cursor: pointer;"  onclick="document.getElementById('transactionsButton').click()">
+                <p>Transaction History</p><div class="user-portfolio-dropdown"><img src="images/wallet-icon.png" alt="History" style="height: 100%;"></div>
+              </div>
+          </div>
+          <div style="width: 100%;display: flex; gap: 10px;">
+            <div class="user-portfolio-balance" id="userBalance">$------</div>
+            <img src="images/graph_icon.png" alt="" style="height: 20px;" >
           </div>
 
-          <div class="user-portfolio-balance" id="userBalance">$------</div>
 
           <div style="margin-bottom: 10px;">
             <span class="user-porfolio-badge" id="profitPercentage">---%</span>
@@ -706,19 +711,19 @@
 
           <div style="width: 100%; margin-top: 10px; display:flex;gap: 10px;justify-content: space-between;">
 
-            <div  style="display: flex; flex-direction: column;gap: 10px;padding: 10px;align-items: center;width: 100%;" onclick="document.getElementById('depositButton').click()">
+            <div  style="display: flex; flex-direction: column;gap: 10px;padding: 10px;align-items: center;width: 100%; cursor: pointer;" onclick="document.getElementById('depositButton').click()">
               <img src="images/withdraw-icon.png" alt="" style="width: 50px;height: 50px;border-radius: 60px;background-color: #2563eb;padding: 12px;">
               <p style="font-size: 14px;text-align: center;">Deposit</p>
             </div>
 
-            <div  style="display: flex; flex-direction: column;gap: 10px;padding: 10px;align-items: center;width: 100%;" onclick="document.getElementById('withdrawButton').click()">
+            <div  style="display: flex; flex-direction: column;gap: 10px;padding: 10px;align-items: center;width: 100%; cursor: pointer;" onclick="document.getElementById('withdrawButton').click()">
               <img src="images/deposit-icon.png" alt="" style="width: 50px;height: 50px;border-radius: 60px;background-color: #2563eb;padding: 12px;">
               <p style="font-size: 14px;text-align: center;">Withdraw</p>
             </div>
             
-            <div  style="display: flex; flex-direction: column;gap: 10px;padding: 10px;align-items: center;width: 100%;" onclick="document.getElementById('transactionsButton').click()">
-              <img src="images/transaction-history-icon.png" alt="" style="width: 50px;height: 50px;border-radius: 60px;background-color: #2563eb;padding: 12px;">
-              <p style="font-size: 14px;text-align: center;">Transaction History</p>
+            <div  style="display: flex; flex-direction: column;gap: 10px;padding: 10px;align-items: center;width: 100%; cursor: pointer;" id="walletButton">
+              <img src="images/internal-transfer-icon.png" alt="" style="width: 50px;height: 50px;border-radius: 60px;background-color: #2563eb;padding: 12px;">
+              <p style="font-size: 14px;text-align: center;">Transfer</p>
             </div>            
 
           </div>
