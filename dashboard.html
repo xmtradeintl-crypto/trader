@@ -214,7 +214,7 @@
         }
         .market-header{display: flex;width: 100%;align-items: center;justify-content: space-between;padding: 0px 20px; padding-top: 15px;}
         .categories-scrollbar{display: flex;width: 100%;align-items: center;overflow-x: auto;gap: 5px;padding: 0px 10px;white-space: nowrap;height: 70px;position: sticky;top: 0;}
-        .market-category-pill{text-align: center; color: #ffffffaf;border-radius: 50px;padding: 5px 16px;background-color: #ffffff0c;cursor: pointer; font-weight: bold;font-size: 12px;}
+        .market-category-pill{text-align: center; color: #ffffffaf;border-radius: 50px;padding: 5px 16px;background-color: #ffffff0c;cursor: pointer; font-weight: bold;font-size: 14px;}
         .market-category-pill:hover{background-color: #ffffff36;}
         .notification-category-pill{text-align: center; color: #ffffffaf;border-radius: 50px;padding: 5px 16px;background-color: #ffffff0c;cursor: pointer;font-weight: bold;font-size: 12px;}
         .notification-category-pill:hover{background-color: #ffffff36;}    
@@ -467,6 +467,7 @@
         .notification-category-pill{text-align: center; color: #ffffffaf;border-radius: 50px;padding: 8px 16px;background-color: #1a2340;cursor: pointer;font-weight: bold;}
         .notification-categories-scrollbar .active {background-color: white;color: #0c1324;}
         .panel-mild{background-color: #1e2741;}
+        .xm-loader-text {text-align: center;color: #ffffffa2;font-size: 12px;width: 80%;}
     </style>
 
     <style>
@@ -658,7 +659,7 @@
 
         <div class="user-portfolio-data-wrapper">
 
-        <div class="user-portfolio-card" style="border: #3b82f6 solid 1px;">
+        <div class="user-portfolio-card" style="border: #3b82f6 solid 1px; background-color: #3b83f613;">
 
           <div class="user-portfolio-header">
             <div class="status" id="balanceTag">Wallet Loading...</div>
@@ -821,7 +822,7 @@
               <circle class="wave w2" cx="100" cy="100" r="20" />
               <circle class="wave w3" cx="100" cy="100" r="20" />
             </svg>
-            <p style="text-align: center;color: #ffffffa2;font-size: 12px;width: 80%;">No trading records found. <br>Start trading to see trading records here.</p>
+            <p class="xm-loader-text">No trading records found. <br>Start trading to see trading records here.</p>
           </div>
 
         </div>
@@ -1336,8 +1337,7 @@
           <div id="notificationView" class="slide-canvas canvas-disabled">
             <div class="slide-panel-topbar">
               <h3>All Notifications</h3>
-              <div style="display: flex; gap: 20px;">
-                <img src="images/settings-wheel-icon.png" alt="" class="slide-panel-topbar-img">               
+              <div style="display: flex; gap: 20px;">             
                 <img src="images/cancle-icon.png" alt="" class="cancel-btn slide-panel-topbar-img">
               </div>
             </div>
@@ -1359,7 +1359,7 @@
                       <circle class="wave w2" cx="100" cy="100" r="20" />
                       <circle class="wave w3" cx="100" cy="100" r="20" />
                     </svg>
-                    <p style="text-align: center;color: #ffffffa2;font-size: 12px;width: 80%;">You're all caught up! We'll notify you here when there's something new</p>
+                    <p class="xm-loader-text">You're all caught up! We'll notify you here when there's something new</p>
                     <p style="font-size: 16px;font-weight: 600; padding: 10px 10px; border: 1px #fff solid;border-radius: 8px;margin-top: 30px; cursor: pointer;">Explore Instruments</p>
                   </div>
 
@@ -1729,7 +1729,7 @@
                     <circle class="wave w2" cx="100" cy="100" r="20" />
                     <circle class="wave w3" cx="100" cy="100" r="20" />
                   </svg>
-                  <p style="text-align: center;color: #ffffffa2;font-size: 12px;width: 80%;">Competitions unavailable</p>
+                  <p class="xm-loader-text">Competitions unavailable</p>
                 </div>
               </div>                 
 
@@ -1751,7 +1751,7 @@
                     <circle class="wave w2" cx="100" cy="100" r="20" />
                     <circle class="wave w3" cx="100" cy="100" r="20" />
                   </svg>
-                  <p style="text-align: center;color: #ffffffa2;font-size: 12px;width: 80%;">Bonus unavailable</p>
+                  <p class="xm-loader-text">Bonus unavailable</p>
                 </div>
               </div>                 
 
@@ -1773,7 +1773,7 @@
                     <circle class="wave w2" cx="100" cy="100" r="20" />
                     <circle class="wave w3" cx="100" cy="100" r="20" />
                   </svg>
-                  <p style="text-align: center;color: #ffffffa2;font-size: 12px;width: 80%;">Refere a friend unavailable</p>
+                  <p class="xm-loader-text">Refere a friend unavailable</p>
                 </div>
               </div>                 
 
@@ -1795,7 +1795,7 @@
                     <circle class="wave w2" cx="100" cy="100" r="20" />
                     <circle class="wave w3" cx="100" cy="100" r="20" />
                   </svg>
-                  <p style="text-align: center;color: #ffffffa2;font-size: 12px;width: 80%;">Traders club unavailable</p>
+                  <p class="xm-loader-text">Traders club unavailable</p>
                 </div>
               </div>                 
 
@@ -1817,7 +1817,7 @@
                     <circle class="wave w2" cx="100" cy="100" r="20" />
                     <circle class="wave w3" cx="100" cy="100" r="20" />
                   </svg>
-                  <p style="text-align: center;color: #ffffffa2;font-size: 12px;width: 80%;">News unavailable</p>
+                  <p class="xm-loader-text">News unavailable</p>
                 </div>
               </div>                 
 
@@ -1839,7 +1839,7 @@
                     <circle class="wave w2" cx="100" cy="100" r="20" />
                     <circle class="wave w3" cx="100" cy="100" r="20" />
                   </svg>
-                  <p style="text-align: center;color: #ffffffa2;font-size: 12px;width: 80%;">Analysis unavailable</p>
+                  <p class="xm-loader-text">Analysis unavailable</p>
                 </div>
               </div>                 
 
@@ -1861,7 +1861,7 @@
                     <circle class="wave w2" cx="100" cy="100" r="20" />
                     <circle class="wave w3" cx="100" cy="100" r="20" />
                   </svg>
-                  <p style="text-align: center;color: #ffffffa2;font-size: 12px;width: 80%;">Economic calendar unavailable</p>
+                  <p class="xm-loader-text">Economic calendar unavailable</p>
                 </div>
               </div>                 
 
@@ -1883,7 +1883,7 @@
                     <circle class="wave w2" cx="100" cy="100" r="20" />
                     <circle class="wave w3" cx="100" cy="100" r="20" />
                   </svg>
-                  <p style="text-align: center;color: #ffffffa2;font-size: 12px;width: 80%;">Trading central unavailable</p>
+                  <p class="xm-loader-text">Trading central unavailable</p>
                 </div>
               </div>                 
 
@@ -1905,7 +1905,7 @@
                     <circle class="wave w2" cx="100" cy="100" r="20" />
                     <circle class="wave w3" cx="100" cy="100" r="20" />
                   </svg>
-                  <p style="text-align: center;color: #ffffffa2;font-size: 12px;width: 80%;">Forex calculator unavailable</p>
+                  <p class="xm-loader-text">Forex calculator unavailable</p>
                 </div>
               </div>                 
 
@@ -1927,7 +1927,7 @@
                     <circle class="wave w2" cx="100" cy="100" r="20" />
                     <circle class="wave w3" cx="100" cy="100" r="20" />
                   </svg>
-                  <p style="text-align: center;color: #ffffffa2;font-size: 12px;width: 80%;">Help center unavailable</p>
+                  <p class="xm-loader-text">Help center unavailable</p>
                 </div>
               </div>                 
 
@@ -1949,7 +1949,7 @@
                     <circle class="wave w2" cx="100" cy="100" r="20" />
                     <circle class="wave w3" cx="100" cy="100" r="20" />
                   </svg>
-                  <p style="text-align: center;color: #ffffffa2;font-size: 12px;width: 80%;">Live chat unavailable</p>
+                  <p class="xm-loader-text">Live chat unavailable</p>
                 </div>
               </div>                 
 
@@ -1971,7 +1971,7 @@
                     <circle class="wave w2" cx="100" cy="100" r="20" />
                     <circle class="wave w3" cx="100" cy="100" r="20" />
                   </svg>
-                  <p style="text-align: center;color: #ffffffa2;font-size: 12px;width: 80%;">Submit a question unavailable</p>
+                  <p class="xm-loader-text">Submit a question unavailable</p>
                 </div>
               </div>                 
 
